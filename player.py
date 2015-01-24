@@ -8,7 +8,7 @@ class player(object):
     image = None
     rect = None
     isWall = False
-    breakable = False
+    breakable = True
     deadly = False
     putBomb = False
 

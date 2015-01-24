@@ -69,11 +69,10 @@ class gamefield:
 
         return tempList
 
-    def getObject(self, x, y):
+    def getObjectBreakable(self, x, y, pos):
         if (0 <= x <= FIELDS_X) and (0 <= y <= FIELDS_Y):
-            nObject = self.fields[y][x]
-
-        return nObject
+            pass
+        return self.fields[y][x][pos]
 
     def move(self, nObject, iX, iY, x, y):
         if (0 <= iX <= FIELDS_X - 1) and (0 <= iY <= FIELDS_Y - 1):

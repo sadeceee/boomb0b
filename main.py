@@ -1,5 +1,6 @@
 import pygame
 from constants import *
+from gamefield import *
 
 def main():
     pygame.init()
@@ -10,6 +11,8 @@ def main():
 
     clock = pygame.time.Clock()
     done = False
+
+    gf = gamefield()
 
     while not done:
         clock.tick(60)

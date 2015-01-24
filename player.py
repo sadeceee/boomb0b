@@ -58,22 +58,22 @@ class player_1(player):
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_UP:
                 self.move_up()
-            if event.key == pygame.K_DOWN:
+            elif event.key == pygame.K_DOWN:
                 self.move_down()
-            if event.key == pygame.K_RIGHT:
+            elif event.key == pygame.K_RIGHT:
                 self.move_right()
-            if event.key == pygame.K_LEFT:
+            elif event.key == pygame.K_LEFT:
                 self.move_left()
             if event.key == pygame.K_SPACE:
                 self.createBomb()
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_UP:
                 self.stop()
-            if event.key == pygame.K_DOWN:
+            elif event.key == pygame.K_DOWN:
                 self.stop()
-            if event.key == pygame.K_RIGHT:
+            elif event.key == pygame.K_RIGHT:
                 self.stop()
-            if event.key == pygame.K_LEFT:
+            elif event.key == pygame.K_LEFT:
                 self.stop()
             if event.key == pygame.K_SPACE:
                 self.resetBomb()

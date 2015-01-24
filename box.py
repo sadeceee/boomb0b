@@ -111,10 +111,6 @@ class explosion(box):
 
         self.image = self.filename_anim
 
-
-
-
-
     def update(self, gf, x, y):
         self.timer -= 1
         if(self.timer <= 0):
@@ -125,7 +121,6 @@ class explosion(box):
                 self.expand(gf, self.mySize, x, y)
             return False
         return False
-
 
     def expand(self, gf, s, x, y):
         if(self.direction == EXP_CENTER):

@@ -12,7 +12,7 @@ def main():
     clock = pygame.time.Clock()
     done = False
 
-    gf = gamefield()
+    gf = gamefield(screen)
 
     while not done:
         clock.tick(60)
@@ -22,6 +22,8 @@ def main():
                 done = True
 
         screen.fill(BLACK)
+
+        gf.draw()
 
         pygame.display.flip()
 

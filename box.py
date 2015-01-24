@@ -57,22 +57,23 @@ class bomb(box):
         self.bombSize = mySize
         self.load("IMG", "bomb.png")
 
-        gf.add(self, x, y)
+        # gf.add(self, x, y)
 
     def update(self, gf, x, y):
         self.counter += 1
         if(self.counter == BOMB_TIMER):
             explosion(gf, self.bombSize, EXP_CENTER, x, y)
-            return False
+            return True
         return False
 
 class explosion(box):
     mySize = 0
     counter = 0
+    timer = 0
     direction = EXP_CENTER
 
-    # @param center: boolean, is explosion in center
-    # @param size: size left to expand (e.g. 2 = can expand 2 more times
+    # @param myDir: boolean, is explosion in center
+    # @param s: size left to expand (e.g. 2 = can expand 2 more times
     def __init__(self, gf, s, myDir, x, y):
         super(explosion, self).__init__()
 
@@ -80,6 +81,7 @@ class explosion(box):
         self.breakable = False
         self.deadly = True
         self.mySize = s
+        self.timer = s * EXP_DURATION
         self.direction = myDir
         if self.direction == EXP_CENTER:
             self.load("IMG", "dummy.bmp") # TODO center explosion image
@@ -88,6 +90,9 @@ class explosion(box):
         gf.add(self, x, y)
 
     def update(self, gf, x, y):
+        self.timer -= 1
+        if(self.timer <= 0):
+            return True
         if(self.mySize > 0):
             self.counter += 1
             if(self.counter == EXPLOSION_EXPAND):

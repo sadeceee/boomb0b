@@ -14,7 +14,7 @@ class gamefield:
                 elif(self.fields[y][x] == '2'):
                     self.fields[y][x] = crate()
                 else:
-                    self.fields[y][x] = dummy()
+                    self.fields[y][x] = boden()
 
         self.c_screen = screen
 

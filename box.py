@@ -52,7 +52,17 @@ class dummy(box):
     def __init__(self):
         super(dummy, self).__init__()
 
-        self.isWall = True
+        self.isWall = False
         self.breakable = False
 
         self.load("IMG", "dummy.bmp")
+
+class boden(box):
+
+    def __init__(self):
+        super(boden, self).__init__()
+
+        self.isWall = False
+        self.breakable = False
+
+        self.load("IMG", "boden.bmp")

@@ -7,7 +7,7 @@ class gamefield:
 
     def __init__(self, screen):
         for y in range(FIELDS_Y):
-            self.fields.append(FIELDS_X * [stone()])
+            self.fields.append(FIELDS_X * [dummy()])
 
         self.c_screen = screen
 

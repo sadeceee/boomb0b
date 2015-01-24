@@ -13,7 +13,7 @@ class box(object):
         screen.blit(self.image, (x, y))
 
     def load(self, dir, filename):
-        image = image_loader(dir, filename)
+        self.image = image_loader(dir, filename)
 
 class stone(box):
 
@@ -46,3 +46,13 @@ class bomb(box):
         self.breakable = False
 
         # self.load("IMG", TODO)
+
+class dummy(box):
+
+    def __init__(self):
+        super(dummy, self).__init__()
+
+        self.isWall = True
+        self.breakable = False
+
+        self.load("IMG", "dummy.bmp")

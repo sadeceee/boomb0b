@@ -1,5 +1,6 @@
 from constants import *
 from box import *
+from player import *
 import random
 
 class gamefield:
@@ -19,6 +20,8 @@ class gamefield:
                         self.fields[y][x] = crate()
                     else:
                         self.fields[y][x] = boden()
+                elif(self.fields[y][x] == '3'):
+                    self.fields[y][x] = player_1()
                 else:
                     self.fields[y][x] = boden()
 
@@ -43,10 +46,12 @@ class gamefield:
         if (0 <= x <= FIELDS_X) and (0 <= y <= FIELDS_Y):
             return (self.fields[y][x].isWall, self.fields[y][x].breakable, self.fields[y][x].deadly)
 
-    def move(self, nObject, iX, iY):
+    def move(self, nObject, iX, iY, x, y):
         if (0 <= iX <= FIELDS_X) and (0 <= iY <= FIELDS_Y):
-            for y in range(FIELDS_Y):
-                for x in range(FIELDS_X):
-                    if (self.fields[y][x] == nObject):
-                        self.fields[y][x] = boden();
-                        self.fields[iY][iX] = nObject
+           self.fields[y][x] = boden()
+           self.fields[iY][iX] = nObject
+
+    def handleEvent(self, event):
+        for y in range(FIELDS_Y):
+            for x in range(FIELDS_X):
+                self.fields[y][x].handleEvent(event)

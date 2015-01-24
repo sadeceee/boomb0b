@@ -1,3 +1,5 @@
+import pygame
+from constants import *
 from gamefield import *
 
 def main():
@@ -10,7 +12,7 @@ def main():
     clock = pygame.time.Clock()
     done = False
 
-    gf = gamefield()
+    gf = gamefield(screen)
 
     while not done:
         clock.tick(60)
@@ -18,6 +20,7 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 done = True
+            gf.handleEvent(event)
 
         screen.fill(BLACK)
 

@@ -20,6 +20,9 @@ class box(object):
     def update(self, gf, x, y):
         pass
 
+    def handleEvent(self, event):
+        pass
+
 class stone(box):
 
     def __init__(self):

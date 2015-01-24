@@ -10,4 +10,4 @@ FIELD_SIZE_HEIGHT = 64
 
 size = (FIELDS_X*FIELD_SIZE_WIDTH, FIELDS_Y*FIELD_SIZE_HEIGHT)
 
-gf = None
+gf = gamefield()

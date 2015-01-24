@@ -79,16 +79,20 @@ class player_1(player):
                 self.resetBomb()
 
     def move_up(self):
-        self.y_runSpeed = -1
+        if self.x_runSpeed == 0:
+            self.y_runSpeed = -1
 
     def move_down(self):
-        self.y_runSpeed = 1
+        if self.x_runSpeed == 0:
+            self.y_runSpeed = 1
 
     def move_right(self):
-        self.x_runSpeed = 1
+        if self.y_runSpeed == 0:
+            self.x_runSpeed = 1
 
     def move_left(self):
-        self.x_runSpeed = -1
+        if self.y_runSpeed == 0:
+            self.x_runSpeed = -1
 
     def stop(self):
         self.y_runSpeed = 0

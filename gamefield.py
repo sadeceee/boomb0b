@@ -34,6 +34,10 @@ class gamefield:
                     self.fields[y][x] = []
                     self.fields[y][x].append(boden())
                     self.fields[y][x].append(bomb(self, 3, x, y))
+                elif(self.fields[y][x] == '5'):
+                    self.fields[y][x] = []
+                    self.fields[y][x].append(boden())
+                    self.fields[y][x].append(KI())
                 else:
                     self.fields[y][x] = []
                     self.fields[y][x].append(boden())

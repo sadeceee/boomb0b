@@ -36,7 +36,8 @@ class player_1(player):
     def update(self, gf, x, y):
         # Put bomb
         if self.putBomb:
-            putBomb = False
+            #putBomb = False
+            self.resetBomb()
             bomb(gf, self.bombSize, x, y)
 
         # Move player
@@ -103,5 +104,14 @@ class KI(player):
     """
 
     """
-    pass
 
+    def __init__(self):
+        super(KI, self).__init__()
+
+        self.load("IMG", "KI.png")
+
+    def update(self, gf, x, y):
+        pass
+
+    def handleEvent(self, event):
+        pass

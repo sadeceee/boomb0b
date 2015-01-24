@@ -121,10 +121,14 @@ class explosion(box):
 
 def check_expand(gf, s, direction, newX, newY):
     list = gf.checkPosition(newX, newY)
+    w = False
     for x in list:
         isWall, isBreakable, isDeadly = x
 
-    if not isWall:
+        if isWall:
+            w = True
+
+    if not w:
         explosion(gf, s - 1, direction, newX, newY)
     # TODO check isBreakable
 

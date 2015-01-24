@@ -11,24 +11,24 @@ class gamefield:
         for y in range(FIELDS_Y):
             for x in range(FIELDS_X):
                 if(self.fields[y][x] == '1'):
-                    self.fields[y][x] = ()
+                    self.fields[y][x] = []
                     self.fields[y][x].append(stone())
                 elif(self.fields[y][x] == '2'):
                     iRandom = random.randint(2, 30)
                     if (iRandom % 2 == 0):
-                        self.fields[y][x] = ()
+                        self.fields[y][x] = []
                         self.fields[y][x].append(crate())
                     else:
-                        self.fields[y][x] = ()
+                        self.fields[y][x] = []
                         self.fields[y][x].append(boden())
                 elif(self.fields[y][x] == '3'):
-                    self.fields[y][x] = ()
+                    self.fields[y][x] = []
                     self.fields[y][x].append(player_1())
                 elif(self.fields[y][x] == '4'):
-                    self.fields[y][x] = ()
+                    self.fields[y][x] = []
                     self.fields[y][x].append(bomb(self, 3, x, y))
                 else:
-                    self.fields[y][x] = ()
+                    self.fields[y][x] = []
                     self.fields[y][x].append(boden());
 
         self.c_screen = screen

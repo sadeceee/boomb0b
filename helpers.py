@@ -9,8 +9,18 @@ def image_loader(dir, filename):
         images[filename] = pygame.image.load(os.path.join(dir, filename))
         if ".png" in filename:
             images[filename].convert_alpha()
+        else:
+            images[filename].convert()
 
     return images[filename]
+
+def image_saver(savename, surface):
+    if savename not in images:
+        images[savename] = surface
+        images[savename].convert()
+
+    return images[savename]
+
 
 def map_loader(dir, filename):
     f = open(os.path.join(dir, filename), "r")
@@ -23,9 +33,3 @@ def map_loader(dir, filename):
         fields.append(row)
     f.close()
     return fields
-
-def check_expand(gf, size, direction, newX, newY):
-    isWall, isBreakable, isDeadly = gf.checkPosition(newX, newY)
-    if not isWall:
-        explosion(gf, size, direction, newX, newY)
-    # TODO check isBreakable

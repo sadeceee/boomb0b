@@ -49,7 +49,7 @@ class gamefield:
             return (self.fields[y][x].isWall, self.fields[y][x].breakable, self.fields[y][x].deadly)
 
     def move(self, nObject, iX, iY, x, y):
-        if (0 <= iX <= FIELDS_X) and (0 <= iY <= FIELDS_Y):
+        if (0 <= iX <= FIELDS_X - 1) and (0 <= iY <= FIELDS_Y - 1):
            self.fields[y][x] = boden()
            self.fields[iY][iX] = nObject
 

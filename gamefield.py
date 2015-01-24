@@ -71,8 +71,8 @@ class gamefield:
 
     def getObjectBreakable(self, x, y, pos):
         if (0 <= x <= FIELDS_X) and (0 <= y <= FIELDS_Y):
-            pass
-        return self.fields[y][x][pos]
+            return self.fields[y][x][pos]
+        return False
 
     def move(self, nObject, iX, iY, x, y):
         if (0 <= iX <= FIELDS_X - 1) and (0 <= iY <= FIELDS_Y - 1):

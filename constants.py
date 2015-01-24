@@ -13,11 +13,20 @@ size = (FIELDS_X*FIELD_SIZE_WIDTH, FIELDS_Y*FIELD_SIZE_HEIGHT)
 BOMB_TIMER = 90
 EXPLOSION_EXPAND = 15
 
-EXP_CENTER = "c"
-EXP_UP = "u"
-EXP_RIGHT = "r"
-EXP_DOWN = "d"
-EXP_LEFT = "l"
+EXP_INITIAL = "type_i"
+# EXP_CENTER = "type_c"
+EXP_CENTER_X = "type_c_x"
+EXP_CENTER_T = "type_c_t"
+EXP_CENTER_U = "type_c_u"
+EXP_CENTER_L = "type_c_l"
+EXP_CENTER_B = "type_c_b"
+EXP_BRIDGE = "type_b"
+EXP_END = "type_e"
+EXP_UP = "type_u"
+EXP_RIGHT = "type_r"
+EXP_DOWN = "type_d"
+EXP_LEFT = "type_l"
+
 EXP_DURATION = 20
 
 FILENAME_I = "filename_i"#initial

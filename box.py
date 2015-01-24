@@ -66,7 +66,7 @@ class bomb(box):
     def update(self, gf, x, y):
         self.counter += 1
         if(self.counter == BOMB_TIMER):
-            explosion(gf, self.bombSize, -1, EXP_CENTER, x, y)
+            explosion(gf, self.bombSize, -1, EXP_INITIAL, EXP_INITIAL, x, y)
             return True
         return False
 
@@ -79,35 +79,68 @@ class explosion(box):
     mySize = 0
     counter = 0
     timer = 0
-    direction = EXP_CENTER
+    type = EXP_INITIAL
+    direction = EXP_INITIAL
 
     # @param myDir: boolean, is explosion in center
     # @param s: size left to expand (e.g. 2 = can expand 2 more times
-    def __init__(self, gf, s, timeLeft, myDir, x, y):
+    def __init__(self, gf, s, timeLeft, type, myDir, x, y):
         super(explosion, self).__init__()
 
         self.isWall = False
         self.breakable = False
         self.deadly = True
         self.mySize = s
+        self.type = type
         self.direction = myDir
-        if self.direction == EXP_CENTER:
+        if self.direction == EXP_INITIAL:
             self.timer = s * EXP_DURATION
-            self.load("IMG", "bomb_animation.png") # TODO center explosion image
         else:
             self.timer = timeLeft
-            self.load("IMG", "dummy.bmp") # TODO expanded explosion image
+
+        self.load("IMG", "bomb_animation.png", self.type)
 
         gf.add(self, x, y)
 
-    def load(self, dir, filename):
-        temp_pic = image_test(FILENAME_I)
+    def load(self, dir, filename, type):
+        temp_pic = image_test(self.type)
+
         if(temp_pic == False):
             raw_image = image_loader(dir, filename)
-            self.filename_anim.blit(raw_image, (0,0), (6 * FIELD_SIZE_WIDTH, 0, FIELD_SIZE_WIDTH, FIELD_SIZE_HEIGHT))
-            image_saver(FILENAME_I, self.filename_anim)
-        else:
-            self.filename_anim = temp_pic
+            if(type == EXP_INITIAL):
+                self.filename_anim.blit(raw_image, (0,0), (6 * FIELD_SIZE_WIDTH, 0, FIELD_SIZE_WIDTH, FIELD_SIZE_HEIGHT))
+                image_saver(EXP_INITIAL, self.filename_anim)
+            elif(type == EXP_CENTER_X):
+                self.filename_anim.blit(raw_image, (0,0), (4 * FIELD_SIZE_WIDTH, 0, FIELD_SIZE_WIDTH, FIELD_SIZE_HEIGHT))
+                image_saver(EXP_CENTER_X, self.filename_anim)
+            elif(type == EXP_CENTER_T):
+                self.filename_anim.blit(raw_image, (0,0), (5 * FIELD_SIZE_WIDTH, 0, FIELD_SIZE_WIDTH, FIELD_SIZE_HEIGHT))
+                image_saver(EXP_CENTER_T, self.filename_anim)
+            elif(type == EXP_CENTER_L):
+                self.filename_anim.blit(raw_image, (0,0), (3 * FIELD_SIZE_WIDTH, 0, FIELD_SIZE_WIDTH, FIELD_SIZE_HEIGHT))
+                image_saver(EXP_CENTER_L, self.filename_anim)
+            elif(type == EXP_CENTER_B):
+                self.filename_anim.blit(raw_image, (0,0), (1 * FIELD_SIZE_WIDTH, 0, FIELD_SIZE_WIDTH, FIELD_SIZE_HEIGHT))
+                image_saver(EXP_CENTER_B, self.filename_anim)
+            elif(type == EXP_CENTER_U):
+                self.filename_anim.blit(raw_image, (0,0), (0 * FIELD_SIZE_WIDTH, 0, FIELD_SIZE_WIDTH, FIELD_SIZE_HEIGHT))
+                image_saver(EXP_CENTER_U, self.filename_anim)
+            elif(type == EXP_BRIDGE):
+                self.filename_anim.blit(raw_image, (0,0), (1 * FIELD_SIZE_WIDTH, 0, FIELD_SIZE_WIDTH, FIELD_SIZE_HEIGHT))
+                image_saver(EXP_BRIDGE, self.filename_anim)
+            elif(type == EXP_END):
+                self.filename_anim.blit(raw_image, (0,0), (2 * FIELD_SIZE_WIDTH, 0, FIELD_SIZE_WIDTH, FIELD_SIZE_HEIGHT))
+                image_saver(EXP_END, self.filename_anim)
+        else: self.filename_anim = temp_pic
+
+        # if(self.direction == EXP_UP):
+        #     pass
+        # elif(self.direction == EXP_RIGHT):
+        #     self.filename_anim = pygame.transform.rotate(temp_pic, 90)
+        # elif(self.direction == EXP_DOWN):
+        #     self.filename_anim = pygame.transform.rotate(temp_pic, 180)
+        # elif(self.direction == EXP_LEFT):
+        #         self.filename_anim = pygame.transform.rotate(temp_pic, -90)
 
         self.image = self.filename_anim
 
@@ -118,51 +151,57 @@ class explosion(box):
         if(self.mySize > 0):
             self.counter += 1
             if(self.counter == EXPLOSION_EXPAND):
-                self.expand(gf, self.mySize, x, y)
+                self.expand(gf, x, y)
             return False
         return False
 
-    def expand(self, gf, s, x, y):
-        if(self.direction == EXP_CENTER):
+    def expand(self, gf, x, y):
+        if(self.direction == EXP_INITIAL):
             list = [[0, -1, EXP_UP], [1, 0, EXP_RIGHT], [0, 1, EXP_DOWN], [-1, 0, EXP_LEFT]]
             for z in list:
                 newX = x + z[0]
                 newY = y + z[1]
-                check_expand(gf, s, self.timer, z[2], newX, newY)
+                self.check_expand(gf, z[2], newX, newY)
         elif(self.direction == EXP_UP):
             newX = x
             newY = y -1
-            check_expand(gf, s, self.timer, EXP_UP, newX, newY)
+            self.check_expand(gf, EXP_UP, newX, newY)
         elif(self.direction == EXP_RIGHT):
             newX = x + 1
             newY = y
-            check_expand(gf, s, self.timer, EXP_RIGHT, newX, newY)
+            self.check_expand(gf, EXP_RIGHT, newX, newY)
         elif(self.direction == EXP_DOWN):
             newX = x
             newY = y + 1
-            check_expand(gf, s, self.timer, EXP_DOWN, newX, newY)
+            self.check_expand(gf, EXP_DOWN, newX, newY)
         elif(self.direction == EXP_LEFT):
             newX = x - 1
             newY = y
-            check_expand(gf, s, self.timer, EXP_LEFT, newX, newY)
+            self.check_expand(gf, EXP_LEFT, newX, newY)
 
-def check_expand(gf, s, timeLeft, direction, newX, newY):
-    list = gf.checkPosition(newX, newY)
-    w = False
-    counter = 0
-    for x in list:
-        isWall, isBreakable, isDeadly = x
+    def check_expand(self, gf, direction, newX, newY):
+        list = gf.checkPosition(newX, newY)
+        w = False
+        counter = 0
+        for x in list:
+            isWall, isBreakable, isDeadly = x
 
-        if isWall:
-            w = True
-        if isBreakable:
-            obj = gf.getObjectBreakable(newX, newY, counter)
-            gf.rem(obj, newX, newY)
-        counter += 1
-
-    if not w:
-        explosion(gf, s - 1, timeLeft, direction, newX, newY)
-    # TODO check isBreakable
+            if isWall:
+                w = True
+            if isBreakable:
+                obj = gf.getObjectBreakable(newX, newY, counter)
+                gf.rem(obj, newX, newY)
+                counter -=1
+            counter += 1
+        if not w:
+            tempType = EXP_CENTER_X
+            if(self.type == EXP_INITIAL): # TODO check for Center types as well
+                tempType = EXP_END
+            elif(self.type == EXP_END):
+                self.load("IMG", "bomb_animation.png", EXP_BRIDGE)
+                tempType = EXP_END
+            explosion(gf, self.mySize - 1, self.timer, tempType, direction, newX, newY)
+            # TODO check isBreakable
 
 
 class dummy(box):

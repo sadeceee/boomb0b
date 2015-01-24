@@ -36,7 +36,7 @@ class player_1(player):
     def update(self, gf, x, y):
         # Put bomb
         if self.putBomb:
-            putBomb = False
+            self.resetBomb()
             bomb(gf, self.bombSize, x, y)
 
         # Move player

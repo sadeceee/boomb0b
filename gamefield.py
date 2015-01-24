@@ -18,15 +18,18 @@ class gamefield:
                     iRandom = random.randint(2, 30)
                     if (iRandom % 2 == 0):
                         self.fields[y][x] = []
+                        self.fields[y][x].append(boden())
                         self.fields[y][x].append(crate())
                     else:
                         self.fields[y][x] = []
                         self.fields[y][x].append(boden())
                 elif(self.fields[y][x] == '3'):
                     self.fields[y][x] = []
+                    self.fields[y][x].append(boden())
                     self.fields[y][x].append(player_1())
                 elif(self.fields[y][x] == '4'):
                     self.fields[y][x] = []
+                    self.fields[y][x].append(boden())
                     self.fields[y][x].append(bomb(self, 3, x, y))
                 else:
                     self.fields[y][x] = []

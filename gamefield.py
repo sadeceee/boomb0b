@@ -1,4 +1,5 @@
 from player import *
+from box import *
 import random
 
 class gamefield:
@@ -29,7 +30,7 @@ class gamefield:
                     self.fields[y][x].append(bomb(self, 3, x, y))
                 else:
                     self.fields[y][x] = []
-                    self.fields[y][x].append(boden());
+                    self.fields[y][x].append(boden())
 
         self.c_screen = screen
 

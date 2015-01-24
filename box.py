@@ -1,6 +1,5 @@
 from helpers import *
 from constants import *
-import pygame
 
 class box(object):
     image = None
@@ -57,7 +56,7 @@ class bomb(box):
         self.bombSize = mySize
         self.load("IMG", "bomb.png")
 
-        # gf.add(self, x, y)
+        gf.add(self, x, y)
 
     def update(self, gf, x, y):
         self.counter += 1

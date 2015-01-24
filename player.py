@@ -7,10 +7,11 @@ class player(object):
     isWall = False
     breakable = False
     deadly = False
+    putBomb = False
 
     def __init__(self):
         self.bombSize = 0
-        self.bombCount = 0
+        self.bombCount = 2
         self.y_runSpeed = 0
         self.x_runSpeed = 0
 
@@ -29,6 +30,12 @@ class player_1(player):
         self.load("IMG", "player.png")
 
     def update(self, gf, x, y):
+        # Put bomb
+        if self.putBomb:
+            putBomb = False
+            bomb(gf, self.bombSize, x, y)
+
+        # Move player
         list = gf.checkPosition(x+self.x_runSpeed, y+self.y_runSpeed)
         w = False
         for i in list:
@@ -50,6 +57,8 @@ class player_1(player):
                 self.move_right()
             if event.key == pygame.K_LEFT:
                 self.move_left()
+            if event.key == pygame.K_SPACE:
+                self.createBomb()
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_UP:
                 self.stop()
@@ -59,6 +68,8 @@ class player_1(player):
                 self.stop()
             if event.key == pygame.K_LEFT:
                 self.stop()
+            if event.key == pygame.K_SPACE:
+                self.resetBomb()
 
     def move_up(self):
         self.y_runSpeed = -1
@@ -75,6 +86,13 @@ class player_1(player):
     def stop(self):
         self.y_runSpeed = 0
         self.x_runSpeed = 0
+
+    def createBomb(self):
+        self.putBomb = True
+
+    def resetBomb(self):
+        self.putBomb = False
+
     """
     def collision(self, obj):
         if self.rect.colliderect(stone().rect):

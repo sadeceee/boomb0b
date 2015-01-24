@@ -23,6 +23,10 @@ def main():
 
         screen.fill(BLACK)
 
+        # Update gamefiled and all of his objects
+        gf.update()
+
+        # Draw gamefield and all of his objects
         gf.draw()
 
         pygame.display.flip()

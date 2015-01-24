@@ -1,5 +1,6 @@
 import os
 import pygame
+from box import *
 
 
 images = {}
@@ -23,3 +24,9 @@ def map_loader(dir, filename):
         fields.append(row)
     f.close()
     return fields
+
+def check_expand(gf, size, direction, newX, newY):
+    isWall, isBreakable, isDeadly = gf.checkPosition(newX, newY)
+    if not isWall:
+        explosion(gf, size, direction, newX, newY)
+    # TODO check isBreakable

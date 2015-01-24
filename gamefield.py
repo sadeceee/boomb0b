@@ -22,6 +22,8 @@ class gamefield:
                         self.fields[y][x] = boden()
                 elif(self.fields[y][x] == '3'):
                     self.fields[y][x] = player_1()
+                elif(self.fields[y][x] == '4'):
+                    self.fields[y][x] = bomb(self, 3, x, y)
                 else:
                     self.fields[y][x] = boden()
 

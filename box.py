@@ -48,55 +48,76 @@ class crate(box):
 class bomb(box):
     bombSize = 0
     counter = 0
-    def __init__(self, size):
+    def __init__(self, gf, mySize, x, y):
         super(bomb, self).__init__()
 
         self.isWall = True
         self.breakable = False
-        self.bombSize = size
-        self.load("IMG", "bomb.bmp")
+        self.bombSize = mySize
+        self.load("IMG", "bomb.png")
 
-    def update(self, x, y):
+        gf.add(self, x, y)
+
+    def update(self, gf, x, y):
         self.counter += 1
         if(self.counter > BOMB_TIMER):
-            explosion(True, x, y)
+            explosion(gf, self.bombSize, EXP_CENTER, x, y)
             return True
         return False
 
 class explosion(box):
+    size = 0
     counter = 0
+    direction = EXP_CENTER
 
     # @param center: boolean, is explosion in center
-    def __init__(self, center, x, y):
+    # @param size: size left to expand (e.g. 2 = can expand 2 more times
+    def __init__(self, gf, size, direction, x, y):
         super(explosion, self).__init__()
 
         self.isWall = False
         self.breakable = False
         self.deadly = True
-        if center:
+        self.size = size
+        self.direction = direction
+        if self.direction == EXP_CENTER:
             self.load("IMG", "dummy.bmp") # TODO center explosion image
         else: self.load("IMG", "dummy.bmp") # TODO expanded explosion image
 
         gf.add(self, x, y)
 
     def update(self, gf, x, y):
-        self.counter += 1
-        if(self.counter > EXPLOSION_EXPAND):
-            self.expand(gf, x, y)
-
-    # list: [up, right, down, left)
-    # example: [False, True, True, False]
-    def expand(self, gf, x, y):
-        list = [[0, -1], [1, 0], [0, 1], [-1, 0]]
-        for z in list:
-            newX = x + list[0]
-            newY = y + list[1]
-            isWall, isBreakable, isDeadly = gf.checkPosition(newX, newY)
-            if not isWall:
-                explosion(False, newX, newY)
-            # TODO check isBreakable
+        if(size > 0):
+            self.counter += 1
+            if(self.counter > EXPLOSION_EXPAND):
+                self.expand(gf, size, x, y)
+            return False
+        return False
 
 
+    def expand(self, gf, size, x, y):
+        if(self.direction == EXP_CENTER):
+            list = [[0, -1], [1, 0], [0, 1], [-1, 0]]
+            for z in list:
+                newX = x + list[0]
+                newY = y + list[1]
+                check_expand(gf, size, self.direction, newX, newY)
+        elif(self.direction == EXP_UP):
+            newX = x
+            newY = y -1
+            check_expand(gf, size, self.direction, newX, newY)
+        elif(self.direction == EXP_RIGHT):
+            newX = x + 1
+            newY = y
+            check_expand(gf, size, self.direction, newX, newY)
+        elif(self.direction == EXP_DOWN):
+            newX = x
+            newY = y + 1
+            check_expand(gf, size, self.direction, newX, newY)
+        elif(self.direction == EXP_LEFT):
+            newX = x - 1
+            newY = y
+            check_expand(gf, size, self.direction, newX, newY)
 
 
 class dummy(box):

@@ -1,6 +1,7 @@
 from helpers import *
+import pygame
 
-class box:
+class box(object):
     image = None
     isWall = False
     breakable = False
@@ -17,7 +18,7 @@ class box:
 class stone(box):
 
     def __init__(self):
-        box.__init__()
+        super(stone, self).__init__()
 
         self.isWall = True
         self.breakable = False
@@ -28,7 +29,7 @@ class stone(box):
 class crate(box):
 
     def __init__(self):
-        box.__init__()
+        super(crate, self).__init__()
 
         self.isWall = True
         self.breakable = True
@@ -39,7 +40,7 @@ class crate(box):
 class bomb(box):
 
     def __init__(self):
-        box.__init__()
+        super(bomb, self).__init__()
 
         self.isWall = True
         self.breakable = False

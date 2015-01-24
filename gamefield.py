@@ -57,7 +57,11 @@ class gamefield:
 
     def checkPosition(self, x, y):
         if (0 <= x <= FIELDS_X) and (0 <= y <= FIELDS_Y):
-            return (self.fields[y][x].isWall, self.fields[y][x].breakable, self.fields[y][x].deadly)
+            tempList = []
+            for obj in self.fields[y][x]:
+                tempList.append((obj.isWall, obj.breakable, obj.deadly))
+
+        return tempList
 
     def move(self, nObject, iX, iY, x, y):
         if (0 <= iX <= FIELDS_X - 1) and (0 <= iY <= FIELDS_Y - 1):

@@ -18,7 +18,6 @@ class box(object):
 
     def load(self, dir, filename):
         self.image = image_loader(dir, filename)
-        self.rect = self.image.get_rect()
 
     def update(self, gf, x, y):
         pass
@@ -75,6 +74,8 @@ class explosion(box):
     """
     update(gf, x, y), expand(gf, s, x, y)
     """
+    filename_anim = pygame.Surface((FIELD_SIZE_WIDTH, FIELD_SIZE_HEIGHT))
+
     mySize = 0
     counter = 0
     timer = 0
@@ -92,12 +93,27 @@ class explosion(box):
         self.direction = myDir
         if self.direction == EXP_CENTER:
             self.timer = s * EXP_DURATION
-            self.load("IMG", "dummy.bmp") # TODO center explosion image
+            self.load("IMG", "bomb_animation.png") # TODO center explosion image
         else:
             self.timer = timeLeft
             self.load("IMG", "dummy.bmp") # TODO expanded explosion image
 
         gf.add(self, x, y)
+
+    def load(self, dir, filename):
+        temp_pic = image_test(FILENAME_I)
+        if(temp_pic == False):
+            raw_image = image_loader(dir, filename)
+            self.filename_anim.blit(raw_image, (0,0), (6 * FIELD_SIZE_WIDTH, 0, FIELD_SIZE_WIDTH, FIELD_SIZE_HEIGHT))
+            image_saver(FILENAME_I, self.filename_anim)
+        else:
+            self.filename_anim = temp_pic
+
+        self.image = self.filename_anim
+
+
+
+
 
     def update(self, gf, x, y):
         self.timer -= 1

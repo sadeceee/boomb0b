@@ -1,5 +1,6 @@
 import os
 import pygame
+from constants import *
 
 
 images = {}
@@ -17,10 +18,16 @@ def image_loader(dir, filename):
 def image_saver(savename, surface):
     if savename not in images:
         images[savename] = surface
+        images[savename].set_colorkey(BLACK)
         images[savename].convert()
 
     return images[savename]
 
+def image_test(savename):
+    if savename in images:
+        return images[savename]
+
+    return False
 
 def map_loader(dir, filename):
     f = open(os.path.join(dir, filename), "r")

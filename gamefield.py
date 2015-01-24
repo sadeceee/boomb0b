@@ -37,13 +37,15 @@ class gamefield:
     def draw(self):
         for y in range(FIELDS_Y):
             for x in range(FIELDS_X):
-                self.fields[y][x].draw(self.c_screen, (x*FIELD_SIZE_WIDTH), (y*FIELD_SIZE_HEIGHT))
+                for obj in self.fields[y][x]:
+                    obj.draw(self.c_screen, (x*FIELD_SIZE_WIDTH), (y*FIELD_SIZE_HEIGHT))
 
     def update(self):
         for y in range(FIELDS_Y):
             for x in range(FIELDS_X):
-                if (self.fields[y][x].update(self, x, y) == True):
-                    self.rem(self.fields[y][x], x, y)
+                for obj in self.fields[y][x]:
+                    if (obj.update(self, x, y) == True):
+                        self.rem(obj, x, y)
 
     def add(self, nObject, x, y):
         if (0 <= x <= FIELDS_X) and (0 <= y <= FIELDS_Y):
@@ -65,4 +67,5 @@ class gamefield:
     def handleEvent(self, event):
         for y in range(FIELDS_Y):
             for x in range(FIELDS_X):
-                self.fields[y][x].handleEvent(event)
+                for obj in self.fields[y][x]:
+                    obj.handleEvent(event)

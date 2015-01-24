@@ -34,7 +34,7 @@ class crate(box):
         self.isWall = True
         self.breakable = True
 
-        # self.load("IMG", TODO)
+        self.load("IMG", "crate.bmp")
 
 
 class bomb(box):
@@ -45,7 +45,7 @@ class bomb(box):
         self.isWall = True
         self.breakable = False
 
-        # self.load("IMG", TODO)
+        self.load("IMG", "bomb.bmp")
 
 class dummy(box):
 

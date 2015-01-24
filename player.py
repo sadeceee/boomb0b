@@ -103,5 +103,14 @@ class KI(player):
     """
 
     """
-    pass
 
+    def __init__(self):
+        super(KI, self).__init__()
+
+        self.load("IMG", "KI.png")
+
+    def update(self, gf, x, y):
+        pass
+
+    def handleEvent(self, event):
+        pass

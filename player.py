@@ -4,6 +4,9 @@ from box import stone, crate, bomb
 class player(object):
     image = None
     rect = None
+    isWall = False
+    breakable = False
+    deadly = False
 
     def __init__(self):
         self.bombSize = 0
@@ -26,7 +29,16 @@ class player_1(player):
         self.load("IMG", "player.png")
 
     def update(self, gf, x, y):
-        gf.move(self, x+self.x_runSpeed, y+self.y_runSpeed, x, y)
+        list = gf.checkPosition(x+self.x_runSpeed, y+self.y_runSpeed)
+        w = False
+        for i in list:
+            isWall, isBreakable, isDeadly = i
+
+            if isWall:
+                w = True
+
+        if not w:
+            gf.move(self, x+self.x_runSpeed, y+self.y_runSpeed, x, y)
 
     def handleEvent(self, event):
         if event.type == pygame.KEYDOWN:
@@ -63,15 +75,15 @@ class player_1(player):
     def stop(self):
         self.y_runSpeed = 0
         self.x_runSpeed = 0
-
+    """
     def collision(self, obj):
         if self.rect.colliderect(stone().rect):
-            return True
+            self.stop()
         elif self.rect.colliderect(crate().rect):
-            return True
+            self.stop()
         else:
             return False
-
+    """
 class KI(player):
 
     pass

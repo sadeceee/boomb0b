@@ -22,7 +22,7 @@ def main():
                 done = True
             gf.handleEvent(event)
 
-        screen.fill(BLACK)
+        screen.fill(GREEN)
 
         # Update gamefield and all of his objects
         gf.update()

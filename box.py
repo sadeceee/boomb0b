@@ -16,6 +16,7 @@ class box(object):
 
     def load(self, dir, filename):
         self.image = image_loader(dir, filename)
+        self.rect = self.image.get_rect()
 
     def update(self, gf, x, y):
         pass

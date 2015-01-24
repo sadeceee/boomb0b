@@ -17,7 +17,7 @@ class box:
 class stone(box):
 
     def __init__(self):
-        super(box)
+        super(box, self).__init__()
 
         self.isWall = True
         self.breakable = False
@@ -28,7 +28,7 @@ class stone(box):
 class crate(box):
 
     def __init__(self):
-        super(box)
+        super(box, self).__init__()
 
         self.isWall = True
         self.breakable = True
@@ -39,7 +39,7 @@ class crate(box):
 class bomb(box):
 
     def __init__(self):
-        super(box)
+        super(box, self).__init__()
 
         self.isWall = True
         self.breakable = False

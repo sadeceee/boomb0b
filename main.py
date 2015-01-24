@@ -1,5 +1,3 @@
-import pygame
-from constants import *
 from gamefield import *
 
 def main():
@@ -12,7 +10,7 @@ def main():
     clock = pygame.time.Clock()
     done = False
 
-    gf.set_screen(screen)
+    gf = gamefield()
 
     while not done:
         clock.tick(60)
@@ -23,7 +21,7 @@ def main():
 
         screen.fill(BLACK)
 
-        # Update gamefiled and all of his objects
+        # Update gamefield and all of his objects
         gf.update()
 
         # Draw gamefield and all of his objects

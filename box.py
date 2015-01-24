@@ -17,7 +17,7 @@ class box(object):
     def load(self, dir, filename):
         self.image = image_loader(dir, filename)
 
-    def update(self, x, y):
+    def update(self, gf, x, y):
         pass
 
 class stone(box):
@@ -76,19 +76,19 @@ class explosion(box):
 
         gf.add(self, x, y)
 
-    def update(self, x, y):
+    def update(self, gf, x, y):
         self.counter += 1
         if(self.counter > EXPLOSION_EXPAND):
-            self.expand(x, y)
+            self.expand(gf, x, y)
 
     # list: [up, right, down, left)
     # example: [False, True, True, False]
-    def expand(self, x, y):
+    def expand(self, gf, x, y):
         list = [[0, -1], [1, 0], [0, 1], [-1, 0]]
         for z in list:
             newX = x + list[0]
             newY = y + list[1]
-            isWall, isBreakable, isDeadly = checkPosition(newX, newY)
+            isWall, isBreakable, isDeadly = gf.checkPosition(newX, newY)
             if not isWall:
                 explosion(False, newX, newY)
             # TODO check isBreakable

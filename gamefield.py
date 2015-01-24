@@ -6,7 +6,7 @@ class gamefield:
     fields = []
     c_screen = None
 
-    def __init__(self):
+    def __init__(self, screen):
         random.seed()
         self.fields = map_loader("MAP", "default.map")
         for y in range(FIELDS_Y):
@@ -22,7 +22,6 @@ class gamefield:
                 else:
                     self.fields[y][x] = boden()
 
-    def set_screen(self, screen):
         self.c_screen = screen
 
     def draw(self):
@@ -33,7 +32,7 @@ class gamefield:
     def update(self):
         for y in range(FIELDS_Y):
             for x in range(FIELDS_X):
-                if (self.fields[y][x].update(x, y) == True):
+                if (self.fields[y][x].update(self, x, y) == True):
                     self.fields[y][x] = boden()
 
     def add(self, nObject, x, y):

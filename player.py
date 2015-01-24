@@ -1,4 +1,5 @@
 from helpers import *
+from box import stone, crate, bomb
 
 class player(object):
     image = None
@@ -62,6 +63,14 @@ class player_1(player):
     def stop(self):
         self.y_runSpeed = 0
         self.x_runSpeed = 0
+
+    def collision(self, obj):
+        if self.rect.colliderect(stone().rect):
+            return True
+        elif self.rect.colliderect(crate().rect):
+            return True
+        else:
+            return False
 
 class KI(player):
 

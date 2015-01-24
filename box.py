@@ -57,7 +57,7 @@ class bomb(box):
         super(bomb, self).__init__()
 
         self.isWall = True
-        self.breakable = False
+        self.breakable = True
         self.bombSize = mySize
         self.load("IMG", "bomb.png")
 
@@ -154,6 +154,10 @@ def check_expand(gf, s, timeLeft, direction, newX, newY):
 
         if isWall:
             w = True
+        if isBreakable:
+            obj = gf.getObject(newX, newY)
+            print obj
+            gf.rem(obj, newX, newY)
 
     if not w:
         explosion(gf, s - 1, timeLeft, direction, newX, newY)

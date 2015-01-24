@@ -69,6 +69,12 @@ class gamefield:
 
         return tempList
 
+    def getObject(self, x, y):
+        if (0 <= x <= FIELDS_X) and (0 <= y <= FIELDS_Y):
+            nObject = self.fields[y][x]
+
+        return nObject
+
     def move(self, nObject, iX, iY, x, y):
         if (0 <= iX <= FIELDS_X - 1) and (0 <= iY <= FIELDS_Y - 1):
            self.rem(nObject, x, y)

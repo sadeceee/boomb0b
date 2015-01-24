@@ -3,6 +3,9 @@ from box import *
 import random
 
 class gamefield:
+    """
+    draw(), update(), add(nObject, x, y), rem(nObject, x, y), checkPosition(x, y), move(nObject, iX, iY, x, y), handleEvent(event)
+    """
     fields = []
     c_screen = None
 

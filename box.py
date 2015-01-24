@@ -2,6 +2,9 @@ from helpers import *
 from constants import *
 
 class box(object):
+    """
+    draw(screen, x, y), load(dir, filename), update(gf, x, y), handleEvent(event)
+    """
     image = None
     isWall = False
     breakable = False
@@ -46,6 +49,9 @@ class crate(box):
 
 
 class bomb(box):
+    """
+    update(gf, x, y)
+    """
     bombSize = 0
     counter = 0
     def __init__(self, gf, mySize, x, y):
@@ -66,6 +72,9 @@ class bomb(box):
         return False
 
 class explosion(box):
+    """
+    update(gf, x, y), expand(gf, s, x, y)
+    """
     mySize = 0
     counter = 0
     timer = 0

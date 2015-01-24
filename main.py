@@ -18,7 +18,7 @@ def main():
         clock.tick(60)
 
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:
+            if event.type == pygame.QUIT or (event.type == pygame.KEYUP and event.key == pygame.K_ESCAPE):
                 done = True
             gf.handleEvent(event)
 

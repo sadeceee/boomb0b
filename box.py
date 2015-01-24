@@ -61,7 +61,7 @@ class bomb(box):
     def update(self, gf, x, y):
         self.counter += 1
         if(self.counter == BOMB_TIMER):
-            explosion(gf, self.bombSize, EXP_CENTER, x, y)
+            explosion(gf, self.bombSize, -1, EXP_CENTER, x, y)
             return True
         return False
 
@@ -73,18 +73,20 @@ class explosion(box):
 
     # @param myDir: boolean, is explosion in center
     # @param s: size left to expand (e.g. 2 = can expand 2 more times
-    def __init__(self, gf, s, myDir, x, y):
+    def __init__(self, gf, s, timeLeft, myDir, x, y):
         super(explosion, self).__init__()
 
         self.isWall = False
         self.breakable = False
         self.deadly = True
         self.mySize = s
-        self.timer = s * EXP_DURATION
         self.direction = myDir
         if self.direction == EXP_CENTER:
+            self.timer = s * EXP_DURATION
             self.load("IMG", "dummy.bmp") # TODO center explosion image
-        else: self.load("IMG", "dummy.bmp") # TODO expanded explosion image
+        else:
+            self.timer = timeLeft
+            self.load("IMG", "dummy.bmp") # TODO expanded explosion image
 
         gf.add(self, x, y)
 
@@ -106,25 +108,25 @@ class explosion(box):
             for z in list:
                 newX = x + z[0]
                 newY = y + z[1]
-                check_expand(gf, s, z[2], newX, newY)
+                check_expand(gf, s, self.timer, z[2], newX, newY)
         elif(self.direction == EXP_UP):
             newX = x
             newY = y -1
-            check_expand(gf, s, EXP_UP, newX, newY)
+            check_expand(gf, s, self.timer, EXP_UP, newX, newY)
         elif(self.direction == EXP_RIGHT):
             newX = x + 1
             newY = y
-            check_expand(gf, s, EXP_RIGHT, newX, newY)
+            check_expand(gf, s, self.timer, EXP_RIGHT, newX, newY)
         elif(self.direction == EXP_DOWN):
             newX = x
             newY = y + 1
-            check_expand(gf, s, EXP_DOWN, newX, newY)
+            check_expand(gf, s, self.timer, EXP_DOWN, newX, newY)
         elif(self.direction == EXP_LEFT):
             newX = x - 1
             newY = y
-            check_expand(gf, s, EXP_LEFT, newX, newY)
+            check_expand(gf, s, self.timer, EXP_LEFT, newX, newY)
 
-def check_expand(gf, s, direction, newX, newY):
+def check_expand(gf, s, timeLeft, direction, newX, newY):
     list = gf.checkPosition(newX, newY)
     w = False
     for x in list:
@@ -134,7 +136,7 @@ def check_expand(gf, s, direction, newX, newY):
             w = True
 
     if not w:
-        explosion(gf, s - 1, direction, newX, newY)
+        explosion(gf, s - 1, timeLeft, direction, newX, newY)
     # TODO check isBreakable
 
 

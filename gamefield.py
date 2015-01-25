@@ -38,6 +38,10 @@ class gamefield:
                     self.fields[y][x] = []
                     self.fields[y][x].append(boden())
                     self.fields[y][x].append(KI())
+                elif(self.fields[y][x] == '6'):
+                    self.fields[y][x] = []
+                    self.fields[y][x].append(boden())
+                    self.fields[y][x].append(player_2())
                 else:
                     self.fields[y][x] = []
                     self.fields[y][x].append(boden())

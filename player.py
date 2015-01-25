@@ -3,7 +3,7 @@ from box import stone, crate, bomb
 
 class player(object):
     """
-    draw(screen, x, y), load(dir, filename)
+    draw(screen, x, y), load(dir, filename), move_up(), move_down(), move_right(), move_left(), stop(), createBomb(), resetBomb()
     """
     image = None
     rect = None
@@ -24,9 +24,35 @@ class player(object):
     def load(self, dir, filename):
         self.image = image_loader(dir, filename)
 
+    def move_up(self):
+        if self.x_runSpeed == 0:
+            self.y_runSpeed = -1
+
+    def move_down(self):
+        if self.x_runSpeed == 0:
+            self.y_runSpeed = 1
+
+    def move_right(self):
+        if self.y_runSpeed == 0:
+            self.x_runSpeed = 1
+
+    def move_left(self):
+        if self.y_runSpeed == 0:
+            self.x_runSpeed = -1
+
+    def stop(self):
+        self.y_runSpeed = 0
+        self.x_runSpeed = 0
+
+    def createBomb(self):
+        self.putBomb = True
+
+    def resetBomb(self):
+        self.putBomb = False
+
 class player_1(player):
     """
-    update(gf, x, y), handleEvent(event), move_up(), move_down(), move_right(), move_left(), stop(), createBomb(), resetBomb()
+    update(gf, x, y), handleEvent(event)
     """
     def __init__(self):
         super(player_1, self).__init__()
@@ -64,7 +90,7 @@ class player_1(player):
                 self.move_right()
             elif event.key == pygame.K_LEFT:
                 self.move_left()
-            if event.key == pygame.K_SPACE:
+            if event.key == pygame.K_KP_ENTER:
                 self.createBomb()
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_UP:
@@ -75,34 +101,62 @@ class player_1(player):
                 self.stop()
             elif event.key == pygame.K_LEFT:
                 self.stop()
-            if event.key == pygame.K_SPACE:
+            if event.key == pygame.K_KP_ENTER:
                 self.resetBomb()
 
-    def move_up(self):
-        if self.x_runSpeed == 0:
-            self.y_runSpeed = -1
+class player_2(player):
+    """
+    update(gf, x, y), handleEvent(event)
+    """
+    def __init__(self):
+        super(player_2, self).__init__()
 
-    def move_down(self):
-        if self.x_runSpeed == 0:
-            self.y_runSpeed = 1
+        self.load("IMG", "player.png")
 
-    def move_right(self):
-        if self.y_runSpeed == 0:
-            self.x_runSpeed = 1
+    def update(self, gf, x, y):
+        # Put bomb
+        if self.putBomb:
+            #putBomb = False
+            self.resetBomb()
+            bomb(gf, self.bombSize, x, y)
 
-    def move_left(self):
-        if self.y_runSpeed == 0:
-            self.x_runSpeed = -1
+        # Move player
+        list = gf.checkPosition(x+self.x_runSpeed, y+self.y_runSpeed)
+        w = False
+        for i in list:
+            isWall, isBreakable, isDeadly = i
 
-    def stop(self):
-        self.y_runSpeed = 0
-        self.x_runSpeed = 0
+            if isWall:
+                w = True
 
-    def createBomb(self):
-        self.putBomb = True
+        if not w:
+            gf.move(self, x+self.x_runSpeed, y+self.y_runSpeed, x, y)
+            self.x_runSpeed = 0
+            self.y_runSpeed = 0
 
-    def resetBomb(self):
-        self.putBomb = False
+    def handleEvent(self, event):
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_w:
+                self.move_up()
+            elif event.key == pygame.K_s:
+                self.move_down()
+            elif event.key == pygame.K_d:
+                self.move_right()
+            elif event.key == pygame.K_a:
+                self.move_left()
+            if event.key == pygame.K_SPACE:
+                self.createBomb()
+        if event.type == pygame.KEYUP:
+            if event.key == pygame.K_w:
+                self.stop()
+            elif event.key == pygame.K_s:
+                self.stop()
+            elif event.key == pygame.K_d:
+                self.stop()
+            elif event.key == pygame.K_a:
+                self.stop()
+            if event.key == pygame.K_SPACE:
+                self.resetBomb()
 
 class KI(player):
     """

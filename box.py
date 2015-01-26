@@ -163,8 +163,8 @@ def check_expand(gf, s, timeLeft, direction, newX, newY):
             gf.rem(obj, newX, newY)
         counter += 1
 
-        # Zerstörung von Objekten PE
-        # Zerstört den Spieler auch wenn er auf der Bombe steht
+        # Zerstoerung von Objekten PE
+        # Zerstoert den Spieler auch wenn er auf der Bombe steht
         # Leider manchmal auch zwei Kisten hintereinander -> TODO
         #if isBreakable:
         #    obj.destroy(gf, newX, newY)

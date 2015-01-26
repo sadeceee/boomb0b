@@ -1,5 +1,7 @@
+import os
+import configparser
 from helpers import *
-from box import stone, crate, bomb
+from box import bomb
 
 class player(object):
     """
@@ -12,17 +14,43 @@ class player(object):
     deadly = False
     putBomb = False
 
-    def __init__(self):
+    # Moving keys
+    K_BOMB  = -1
+    K_UP    = -1
+    K_DOWN  = -1
+    K_RIGHT = -1
+    K_LEFT  = -1
+
+    """
+    keyMapping: None for KI
+                Else section name in keymapping, like 'player1'
+    """
+    def __init__(self, keyMapping = None):
         self.bombSize = 2
         self.bombCount = 2
         self.y_runSpeed = 0
         self.x_runSpeed = 0
+
+        if (keyMapping != None):
+            self.loadKeys(keyMapping)
+            self.load("IMG", "player.png")
+        else:
+            self.load("IMG", "KI.png")
 
     def draw(self, screen, x, y):
         screen.blit(self.image, (x, y))
 
     def load(self, dir, filename):
         self.image = image_loader(dir, filename)
+
+    def loadKeys(self, keyMapping):
+        config = configparser.ConfigParser()
+        config.read(os.path.join("DATA", "keymapping.ini"))
+        self.K_BOMB  = config[keyMapping]["bomb"]
+        self.K_UP    = config[keyMapping]["up"]
+        self.K_DOWN  = config[keyMapping]["down"]
+        self.K_RIGHT = config[keyMapping]["right"]
+        self.K_LEFT  = config[keyMapping]["left"]
 
     def move_up(self):
         if self.x_runSpeed == 0:
@@ -53,15 +81,6 @@ class player(object):
     def destroy(self, gf, x, y):
         gf.rem(self, x, y)
 
-class player_1(player):
-    """
-    update(gf, x, y), handleEvent(event)
-    """
-    def __init__(self):
-        super(player_1, self).__init__()
-
-        self.load("IMG", "player.png")
-
     def update(self, gf, x, y):
         # Put bomb
         if self.putBomb:
@@ -85,91 +104,34 @@ class player_1(player):
 
     def handleEvent(self, event):
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_UP:
+            if event.key == self.K_UP:
                 self.move_up()
-            elif event.key == pygame.K_DOWN:
+            elif event.key == self.K_DOWN:
                 self.move_down()
-            elif event.key == pygame.K_RIGHT:
+            elif event.key == self.K_RIGHT:
                 self.move_right()
-            elif event.key == pygame.K_LEFT:
+            elif event.key == self.K_LEFT:
                 self.move_left()
-            if event.key == pygame.K_KP_ENTER:
+            if event.key == self.K_BOMB:
                 self.createBomb()
         if event.type == pygame.KEYUP:
-            if event.key == pygame.K_UP:
+            if event.key == self.K_UP:
                 self.stop()
-            elif event.key == pygame.K_DOWN:
+            elif event.key == self.K_DOWN:
                 self.stop()
-            elif event.key == pygame.K_RIGHT:
+            elif event.key == self.K_RIGHT:
                 self.stop()
-            elif event.key == pygame.K_LEFT:
+            elif event.key == self.K_LEFT:
                 self.stop()
-            if event.key == pygame.K_KP_ENTER:
-                self.resetBomb()
-
-class player_2(player):
-    """
-    update(gf, x, y), handleEvent(event)
-    """
-    def __init__(self):
-        super(player_2, self).__init__()
-
-        self.load("IMG", "player.png")
-
-    def update(self, gf, x, y):
-        # Put bomb
-        if self.putBomb:
-            #putBomb = False
-            self.resetBomb()
-            bomb(gf, self.bombSize, x, y)
-
-        # Move player
-        list = gf.checkPosition(x+self.x_runSpeed, y+self.y_runSpeed)
-        w = False
-        for i in list:
-            obj, isWall, isBreakable, isDeadly = i
-
-            if isWall:
-                w = True
-
-        if not w:
-            gf.move(self, x+self.x_runSpeed, y+self.y_runSpeed, x, y)
-            self.x_runSpeed = 0
-            self.y_runSpeed = 0
-
-    def handleEvent(self, event):
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_w:
-                self.move_up()
-            elif event.key == pygame.K_s:
-                self.move_down()
-            elif event.key == pygame.K_d:
-                self.move_right()
-            elif event.key == pygame.K_a:
-                self.move_left()
-            if event.key == pygame.K_SPACE:
-                self.createBomb()
-        if event.type == pygame.KEYUP:
-            if event.key == pygame.K_w:
-                self.stop()
-            elif event.key == pygame.K_s:
-                self.stop()
-            elif event.key == pygame.K_d:
-                self.stop()
-            elif event.key == pygame.K_a:
-                self.stop()
-            if event.key == pygame.K_SPACE:
+            if event.key == self.K_BOMB:
                 self.resetBomb()
 
 class KI(player):
     """
 
     """
-
     def __init__(self):
         super(KI, self).__init__()
-
-        self.load("IMG", "KI.png")
 
     def update(self, gf, x, y):
         pass

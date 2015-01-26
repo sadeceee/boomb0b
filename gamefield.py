@@ -29,7 +29,7 @@ class gamefield:
                 elif(self.fields[y][x] == '3'):
                     self.fields[y][x] = []
                     self.fields[y][x].append(boden())
-                    self.fields[y][x].append(player_1())
+                    self.fields[y][x].append(player("player1"))
                 elif(self.fields[y][x] == '4'):
                     self.fields[y][x] = []
                     self.fields[y][x].append(boden())
@@ -41,7 +41,7 @@ class gamefield:
                 elif(self.fields[y][x] == '6'):
                     self.fields[y][x] = []
                     self.fields[y][x].append(boden())
-                    self.fields[y][x].append(player_2())
+                    self.fields[y][x].append(player("player2"))
                 else:
                     self.fields[y][x] = []
                     self.fields[y][x].append(boden())

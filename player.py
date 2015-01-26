@@ -1,5 +1,5 @@
 import os
-import configparser
+import ConfigParser
 from helpers import *
 from box import bomb
 
@@ -44,13 +44,13 @@ class player(object):
         self.image = image_loader(dir, filename)
 
     def loadKeys(self, keyMapping):
-        config = configparser.ConfigParser()
+        config = ConfigParser.ConfigParser()
         config.read(os.path.join("DATA", "keymapping.ini"))
-        self.K_BOMB  = config[keyMapping]["bomb"]
-        self.K_UP    = config[keyMapping]["up"]
-        self.K_DOWN  = config[keyMapping]["down"]
-        self.K_RIGHT = config[keyMapping]["right"]
-        self.K_LEFT  = config[keyMapping]["left"]
+        self.K_BOMB  = config.getint(keyMapping, "bomb")
+        self.K_UP    = config.getint(keyMapping, "up")
+        self.K_DOWN  = config.getint(keyMapping, "down")
+        self.K_RIGHT = config.getint(keyMapping, "right")
+        self.K_LEFT  = config.getint(keyMapping, "left")
 
     def move_up(self):
         if self.x_runSpeed == 0:

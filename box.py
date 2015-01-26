@@ -25,6 +25,9 @@ class box(object):
     def handleEvent(self, event):
         pass
 
+    def destroy(self, gf, x, y):
+        gf.rem(self, x, y)
+
 class stone(box):
 
     def __init__(self):
@@ -151,7 +154,7 @@ def check_expand(gf, s, timeLeft, direction, newX, newY):
     w = False
     counter = 0
     for x in list:
-        isWall, isBreakable, isDeadly = x
+        obj, isWall, isBreakable, isDeadly = x
 
         if isWall:
             w = True
@@ -160,10 +163,14 @@ def check_expand(gf, s, timeLeft, direction, newX, newY):
             gf.rem(obj, newX, newY)
         counter += 1
 
+        # Zerstörung von Objekten PE
+        # Zerstört den Spieler auch wenn er auf der Bombe steht
+        # Leider manchmal auch zwei Kisten hintereinander -> TODO
+        #if isBreakable:
+        #    obj.destroy(gf, newX, newY)
+
     if not w:
         explosion(gf, s - 1, timeLeft, direction, newX, newY)
-    # TODO check isBreakable
-
 
 class dummy(box):
 

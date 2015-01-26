@@ -50,6 +50,9 @@ class player(object):
     def resetBomb(self):
         self.putBomb = False
 
+    def destroy(self, gf, x, y):
+        gf.rem(self, x, y)
+
 class player_1(player):
     """
     update(gf, x, y), handleEvent(event)
@@ -70,7 +73,7 @@ class player_1(player):
         list = gf.checkPosition(x+self.x_runSpeed, y+self.y_runSpeed)
         w = False
         for i in list:
-            isWall, isBreakable, isDeadly = i
+            obj, isWall, isBreakable, isDeadly = i
 
             if isWall:
                 w = True
@@ -124,7 +127,7 @@ class player_2(player):
         list = gf.checkPosition(x+self.x_runSpeed, y+self.y_runSpeed)
         w = False
         for i in list:
-            isWall, isBreakable, isDeadly = i
+            obj, isWall, isBreakable, isDeadly = i
 
             if isWall:
                 w = True

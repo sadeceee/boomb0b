@@ -40,3 +40,31 @@ def map_loader(dir, filename):
         fields.append(row)
     f.close()
     return fields
+
+"""
+surface: base image
+color:   color to modulate
+colors:  lists of tuples of name, color
+"""
+def modulate_color(surface, color, colors):
+    base_surface = surface.copy()
+    mapped_base_color = pygame.Surface.map_rgb(color)
+
+    pixel_array = pygame.PixelArray(base_surface)
+
+    # Iterate over the colors
+    for c_name,c_color in colors:
+        mapped_color = pygame.Surface.map_rgb(c_color)
+
+        # Iterate over the pixel array of the base surface
+        c_counter = 0
+        for pixel in pixel_array:
+            # Compare pixel color with the mapped base color
+            if pixel == mapped_base_color:
+                # Overwrite the color in the pixel array
+                pixel_array[c_counter] = mapped_color
+
+            c_counter += 1
+
+        # Generate surface from pixel array and save into the images directory
+        image_saver(c_name, pixel_array.make_surface())

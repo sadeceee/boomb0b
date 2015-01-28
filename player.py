@@ -8,6 +8,7 @@ class player(object):
     image = None
     rect = None
     isWall = False
+    isBomb = False
     breakable = True
     deadly = False
     putBomb = False
@@ -73,7 +74,7 @@ class player_1(player):
         list = gf.checkPosition(x+self.x_runSpeed, y+self.y_runSpeed)
         w = False
         for i in list:
-            obj, isWall, isBreakable, isDeadly = i
+            obj, isWall, isBomb, isBreakable, isDeadly = i
 
             if isWall:
                 w = True
@@ -93,7 +94,7 @@ class player_1(player):
                 self.move_right()
             elif event.key == pygame.K_LEFT:
                 self.move_left()
-            if event.key == pygame.K_KP_ENTER:
+            if event.key == pygame.K_PAGEDOWN:
                 self.createBomb()
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_UP:
@@ -104,7 +105,7 @@ class player_1(player):
                 self.stop()
             elif event.key == pygame.K_LEFT:
                 self.stop()
-            if event.key == pygame.K_KP_ENTER:
+            if event.key == pygame.K_PAGEDOWN:
                 self.resetBomb()
 
 class player_2(player):
@@ -127,7 +128,7 @@ class player_2(player):
         list = gf.checkPosition(x+self.x_runSpeed, y+self.y_runSpeed)
         w = False
         for i in list:
-            obj, isWall, isBreakable, isDeadly = i
+            obj, isWall, isBomb, isBreakable, isDeadly = i
 
             if isWall:
                 w = True

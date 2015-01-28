@@ -7,6 +7,7 @@ class box(object):
     """
     image = None
     isWall = False
+    isBomb = False
     breakable = False
     deadly = False
 
@@ -60,6 +61,7 @@ class bomb(box):
         super(bomb, self).__init__()
 
         self.isWall = True
+        self.isBomb = True
         self.breakable = True
         self.bombSize = mySize
         self.load("IMG", "bomb.png")
@@ -154,17 +156,20 @@ def check_expand(gf, s, timeLeft, direction, newX, newY):
     w = False
     counter = 0
     for x in list:
-        obj, isWall, isBreakable, isDeadly = x
+        obj, isWall, isBomb, isBreakable, isDeadly = x
 
         if isWall:
             w = True
         if isBreakable:
             obj = gf.getObjectBreakable(newX, newY, counter)
-            gf.rem(obj, newX, newY)
+            if isBomb:
+                obj.counter == EXPLOSION_EXPAND
+            else:
+                gf.rem(obj, newX, newY)
         counter += 1
 
-        # Zerstörung von Objekten PE
-        # Zerstört den Spieler auch wenn er auf der Bombe steht
+        # Zerstorung von Objekten PE
+        # Zerstort den Spieler auch wenn er auf der Bombe steht
         # Leider manchmal auch zwei Kisten hintereinander -> TODO
         #if isBreakable:
         #    obj.destroy(gf, newX, newY)

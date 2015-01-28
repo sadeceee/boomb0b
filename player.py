@@ -3,6 +3,7 @@ import ConfigParser
 from helpers import *
 from box import bomb
 
+
 class player(object):
     """
     draw(screen, x, y), load(dir, filename), move_up(), move_down(), move_right(), move_left(), stop(), createBomb(), resetBomb()
@@ -10,47 +11,26 @@ class player(object):
     image = None
     rect = None
     isWall = False
+    isBomb = False
     breakable = True
     deadly = False
     putBomb = False
-
-    # Moving keys
-    K_BOMB  = -1
-    K_UP    = -1
-    K_DOWN  = -1
-    K_RIGHT = -1
-    K_LEFT  = -1
 
     """
     keyMapping: None for KI
                 Else section name in keymapping, like 'player1'
     """
-    def __init__(self, keyMapping = None):
+    def __init__(self):
         self.bombSize = 2
         self.bombCount = 2
         self.y_runSpeed = 0
         self.x_runSpeed = 0
-
-        if (keyMapping != None):
-            self.loadKeys(keyMapping)
-            self.load("IMG", "player.png")
-        else:
-            self.load("IMG", "KI.png")
 
     def draw(self, screen, x, y):
         screen.blit(self.image, (x, y))
 
     def load(self, dir, filename):
         self.image = image_loader(dir, filename)
-
-    def loadKeys(self, keyMapping):
-        config = ConfigParser.ConfigParser()
-        config.read(os.path.join("DATA", "keymapping.ini"))
-        self.K_BOMB  = config.getint(keyMapping, "bomb")
-        self.K_UP    = config.getint(keyMapping, "up")
-        self.K_DOWN  = config.getint(keyMapping, "down")
-        self.K_RIGHT = config.getint(keyMapping, "right")
-        self.K_LEFT  = config.getint(keyMapping, "left")
 
     def move_up(self):
         if self.x_runSpeed == 0:
@@ -81,6 +61,28 @@ class player(object):
     def destroy(self, gf, x, y):
         gf.rem(self, x, y)
 
+
+class player_x(player):
+    """
+    update(gf, x, y), handleEvent(event)
+    """
+
+        # Moving keys
+    K_BOMB  = -1
+    K_UP    = -1
+    K_DOWN  = -1
+    K_RIGHT = -1
+    K_LEFT  = -1
+
+    def __init__(self, keyMapping = None):
+        super(player_x, self).__init__()
+
+        self.loadKeys(keyMapping)
+        self.load("IMG", "player.png")
+
+        if (keyMapping != None):
+            self.loadKeys(keyMapping)
+
     def update(self, gf, x, y):
         # Put bomb
         if self.putBomb:
@@ -92,7 +94,7 @@ class player(object):
         list = gf.checkPosition(x+self.x_runSpeed, y+self.y_runSpeed)
         w = False
         for i in list:
-            obj, isWall, isBreakable, isDeadly = i
+            obj, isWall, isBomb, isBreakable, isDeadly = i
 
             if isWall:
                 w = True
@@ -101,6 +103,15 @@ class player(object):
             gf.move(self, x+self.x_runSpeed, y+self.y_runSpeed, x, y)
             self.x_runSpeed = 0
             self.y_runSpeed = 0
+
+    def loadKeys(self, keyMapping):
+        config = ConfigParser.ConfigParser()
+        config.read(os.path.join("DATA", "keyMapping.ini"))
+        self.K_BOMB  = config.getint(keyMapping, "bomb")
+        self.K_UP    = config.getint(keyMapping, "up")
+        self.K_DOWN  = config.getint(keyMapping, "down")
+        self.K_RIGHT = config.getint(keyMapping, "right")
+        self.K_LEFT  = config.getint(keyMapping, "left")
 
     def handleEvent(self, event):
         if event.type == pygame.KEYDOWN:
@@ -130,8 +141,11 @@ class KI(player):
     """
 
     """
+
     def __init__(self):
         super(KI, self).__init__()
+
+        self.load("IMG", "KI.png")
 
     def update(self, gf, x, y):
         pass

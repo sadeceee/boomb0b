@@ -31,7 +31,7 @@ class gamefield:
                 elif self.fields[y][x] == '3':
                     self.fields[y][x] = []
                     self.fields[y][x].append(boden())
-                    self.fields[y][x].append(player("player1"))
+                    self.fields[y][x].append(player_x("player1"))
                 elif self.fields[y][x] == '4':
                     self.fields[y][x] = []
                     self.fields[y][x].append(boden())
@@ -43,7 +43,7 @@ class gamefield:
                 elif self.fields[y][x] == '6':
                     self.fields[y][x] = []
                     self.fields[y][x].append(boden())
-                    self.fields[y][x].append(player("player2"))
+                    self.fields[y][x].append(player_x("player2"))
                 else:
                     self.fields[y][x] = []
                     self.fields[y][x].append(boden())
@@ -75,7 +75,7 @@ class gamefield:
         if (0 <= x <= FIELDS_X) and (0 <= y <= FIELDS_Y):
             templist = []
             for obj in self.fields[y][x]:
-                templist.append((obj, obj.isWall, obj.breakable, obj.deadly))
+                templist.append((obj, obj.isWall, obj.isBomb, obj.breakable, obj.deadly))
 
             return templist
 

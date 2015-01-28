@@ -1,5 +1,5 @@
 from helpers import *
-from box import stone, crate, bomb
+from box import bomb
 
 class player(object):
     """
@@ -13,17 +13,40 @@ class player(object):
     deadly = False
     putBomb = False
 
-    def __init__(self):
+    # Moving keys
+    K_BOMB  = -1
+    K_UP    = -1
+    K_DOWN  = -1
+    K_RIGHT = -1
+    K_LEFT  = -1
+
+    """
+    keyMapping: None for KI
+                Else section name in keymapping, like 'player1'
+    """
+    def __init__(self, keyMapping = None):
         self.bombSize = 2
         self.bombCount = 2
         self.y_runSpeed = 0
         self.x_runSpeed = 0
+
+        if (keyMapping != None):
+            self.loadKeys(keyMapping)
 
     def draw(self, screen, x, y):
         screen.blit(self.image, (x, y))
 
     def load(self, dir, filename):
         self.image = image_loader(dir, filename)
+
+    def loadKeys(self, keyMapping):
+        config = ConfigParser.ConfigParser()
+        config.read(os.path.join("DATA", "keymapping.ini"))
+        self.K_BOMB  = config.getint(keyMapping, "bomb")
+        self.K_UP    = config.getint(keyMapping, "up")
+        self.K_DOWN  = config.getint(keyMapping, "down")
+        self.K_RIGHT = config.getint(keyMapping, "right")
+        self.K_LEFT  = config.getint(keyMapping, "left")
 
     def move_up(self):
         if self.x_runSpeed == 0:
@@ -86,26 +109,26 @@ class player_1(player):
 
     def handleEvent(self, event):
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_UP:
+            if event.key == self.K_UP:
                 self.move_up()
-            elif event.key == pygame.K_DOWN:
+            elif event.key == self.K_DOWN:
                 self.move_down()
-            elif event.key == pygame.K_RIGHT:
+            elif event.key == self.K_RIGHT:
                 self.move_right()
-            elif event.key == pygame.K_LEFT:
+            elif event.key == self.K_LEFT:
                 self.move_left()
-            if event.key == pygame.K_PAGEDOWN:
+            if event.key == self.K_BOMB:
                 self.createBomb()
         if event.type == pygame.KEYUP:
-            if event.key == pygame.K_UP:
+            if event.key == self.K_UP:
                 self.stop()
-            elif event.key == pygame.K_DOWN:
+            elif event.key == self.K_DOWN:
                 self.stop()
-            elif event.key == pygame.K_RIGHT:
+            elif event.key == self.K_RIGHT:
                 self.stop()
-            elif event.key == pygame.K_LEFT:
+            elif event.key == self.K_LEFT:
                 self.stop()
-            if event.key == pygame.K_PAGEDOWN:
+            if event.key == self.K_BOMB:
                 self.resetBomb()
 
 class player_2(player):

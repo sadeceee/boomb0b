@@ -40,3 +40,9 @@ def map_loader(dir, filename):
         fields.append(row)
     f.close()
     return fields
+
+def get_center_value(key):
+    if(key in CENTER_DICTIONARY):
+        return CENTER_DICTIONARY[key]
+    else:
+        return (False, False)

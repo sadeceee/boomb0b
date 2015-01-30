@@ -103,11 +103,11 @@ class explosion(box):
         else:
             self.timer = timeLeft
 
-        self.load("IMG", "bomb_animation.png", self.type)
+        self.load("IMG", "bomb_animation.png", self.type, self.direction)
 
         gf.add(self, x, y)
 
-    def load(self, dir, filename, type):
+    def load(self, dir, filename, type, direction):
         self.filename_anim = pygame.Surface((FIELD_SIZE_WIDTH, FIELD_SIZE_HEIGHT))
         temp_pic = image_test(type)
 
@@ -139,13 +139,13 @@ class explosion(box):
                 image_saver(EXP_END, self.filename_anim)
         else: self.filename_anim = temp_pic
 
-        if(self.direction == EXP_UP):
+        if(direction == EXP_UP):
             pass
-        elif(self.direction == EXP_RIGHT):
+        elif(direction == EXP_RIGHT):
             self.filename_anim = pygame.transform.rotate(self.filename_anim, -90)
-        elif(self.direction == EXP_DOWN):
+        elif(direction == EXP_DOWN):
             self.filename_anim = pygame.transform.rotate(self.filename_anim, 180)
-        elif(self.direction == EXP_LEFT):
+        elif(direction == EXP_LEFT):
             self.filename_anim = pygame.transform.rotate(self.filename_anim, 90)
 
         self.image = self.filename_anim
@@ -164,10 +164,13 @@ class explosion(box):
     def expand(self, gf, x, y):
         if(self.direction == EXP_INITIAL):
             list = [[0, -1, EXP_UP], [1, 0, EXP_RIGHT], [0, 1, EXP_DOWN], [-1, 0, EXP_LEFT]]
+            keyList = []
             for z in list:
                 newX = x + z[0]
                 newY = y + z[1]
-                self.check_expand(gf, z[2], newX, newY)
+                key = self.check_expand(gf, z[2], newX, newY)
+                keyList.append(key)
+            self.check_center(keyList)
         elif(self.direction == EXP_UP):
             newX = x
             newY = y -1
@@ -184,6 +187,13 @@ class explosion(box):
             newX = x - 1
             newY = y
             self.check_expand(gf, EXP_LEFT, newX, newY)
+
+    def check_center(self, keyList):
+        key = ""
+        key = key.join(keyList)
+        myType, myDirection = get_center_value(key)
+        if(myType and myDirection):
+            self.load("IMG", "bomb_animation.png", myType, myDirection)
 
     def check_expand(self, gf, direction, newX, newY):
         list = gf.checkPosition(newX, newY)
@@ -212,10 +222,12 @@ class explosion(box):
             if(self.type == EXP_INITIAL): # TODO check for Center types as well
                 tempType = EXP_END
             elif(self.type == EXP_END):
-                self.load("IMG", "bomb_animation.png", EXP_BRIDGE)
+                self.load("IMG", "bomb_animation.png", EXP_BRIDGE, self.direction)
                 tempType = EXP_END
             explosion(gf, self.mySize - 1, self.timer, tempType, direction, newX, newY)
             # TODO check isBreakable
+            return "1"
+        return "0"
 
 
 class dummy(box):

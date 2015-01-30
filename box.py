@@ -140,17 +140,15 @@ class explosion(box):
         else: self.filename_anim = temp_pic
 
         if(self.direction == EXP_UP):
-            self.filename_anim = pygame.transform.rotate(self.filename_anim, 180)
-        elif(self.direction == EXP_RIGHT):
-            self.filename_anim = pygame.transform.rotate(self.filename_anim, 90)
-        elif(self.direction == EXP_DOWN):
             pass
-        elif(self.direction == EXP_LEFT):
+        elif(self.direction == EXP_RIGHT):
             self.filename_anim = pygame.transform.rotate(self.filename_anim, -90)
+        elif(self.direction == EXP_DOWN):
+            self.filename_anim = pygame.transform.rotate(self.filename_anim, 180)
+        elif(self.direction == EXP_LEFT):
+            self.filename_anim = pygame.transform.rotate(self.filename_anim, 90)
 
         self.image = self.filename_anim
-        print(self.image)
-        print(images)
 
     def update(self, gf, x, y):
         self.timer -= 1

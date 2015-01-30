@@ -1,17 +1,24 @@
+import ConfigParser
 from helpers import *
-from box import stone, crate, bomb
+from box import bomb
+
 
 class player(object):
     """
-    draw(screen, x, y), load(dir, filename)
+    draw(screen, x, y), load(dir, filename), move_up(), move_down(), move_right(), move_left(), stop(), createBomb(), resetBomb()
     """
     image = None
     rect = None
     isWall = False
+    isBomb = False
     breakable = True
     deadly = False
     putBomb = False
 
+    """
+    keyMapping: None for KI
+                Else section name in keymapping, like 'player1'
+    """
     def __init__(self):
         self.bombSize = 2
         self.bombCount = 2
@@ -23,59 +30,6 @@ class player(object):
 
     def load(self, dir, filename):
         self.image = image_loader(dir, filename)
-
-class player_1(player):
-    """
-    update(gf, x, y), handleEvent(event), move_up(), move_down(), move_right(), move_left(), stop(), createBomb(), resetBomb()
-    """
-    def __init__(self):
-        super(player_1, self).__init__()
-
-        self.load("IMG", "player.png")
-
-    def update(self, gf, x, y):
-        # Put bomb
-        if self.putBomb:
-            self.resetBomb()
-            bomb(gf, self.bombSize, x, y)
-
-        # Move player
-        list = gf.checkPosition(x+self.x_runSpeed, y+self.y_runSpeed)
-        w = False
-        for i in list:
-            isWall, isBreakable, isDeadly = i
-
-            if isWall:
-                w = True
-
-        if not w:
-            gf.move(self, x+self.x_runSpeed, y+self.y_runSpeed, x, y)
-            self.x_runSpeed = 0
-            self.y_runSpeed = 0
-
-    def handleEvent(self, event):
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_UP:
-                self.move_up()
-            elif event.key == pygame.K_DOWN:
-                self.move_down()
-            elif event.key == pygame.K_RIGHT:
-                self.move_right()
-            elif event.key == pygame.K_LEFT:
-                self.move_left()
-            if event.key == pygame.K_SPACE:
-                self.createBomb()
-        if event.type == pygame.KEYUP:
-            if event.key == pygame.K_UP:
-                self.stop()
-            elif event.key == pygame.K_DOWN:
-                self.stop()
-            elif event.key == pygame.K_RIGHT:
-                self.stop()
-            elif event.key == pygame.K_LEFT:
-                self.stop()
-            if event.key == pygame.K_SPACE:
-                self.resetBomb()
 
     def move_up(self):
         if self.x_runSpeed == 0:
@@ -102,6 +56,80 @@ class player_1(player):
 
     def resetBomb(self):
         self.putBomb = False
+
+    def destroy(self, gf, x, y):
+        gf.rem(self, x, y)
+
+
+class player_x(player):
+    # Moving keys
+    K_BOMB  = -1
+    K_UP    = -1
+    K_DOWN  = -1
+    K_RIGHT = -1
+    K_LEFT  = -1
+
+    def __init__(self, keyMapping = None):
+        super(player_x, self).__init__()
+
+        self.loadKeys(keyMapping)
+        self.load("IMG", "player.png")
+
+        if (keyMapping != None):
+            self.loadKeys(keyMapping)
+
+    def update(self, gf, x, y):
+        # Put bomb
+        if self.putBomb:
+            self.resetBomb()
+            bomb(gf, self.bombSize, x, y)
+
+        # Move player
+        list = gf.checkPosition(x+self.x_runSpeed, y+self.y_runSpeed)
+        w = False
+        for i in list:
+            obj, isWall, isBomb, isBreakable, isDeadly = i
+
+            if isWall:
+                w = True
+
+        if not w:
+            gf.move(self, x+self.x_runSpeed, y+self.y_runSpeed, x, y)
+            self.x_runSpeed = 0
+            self.y_runSpeed = 0
+
+    def loadKeys(self, keyMapping):
+        config = ConfigParser.ConfigParser()
+        config.read(os.path.join("DATA", "keyMapping.ini"))
+        self.K_BOMB  = config.getint(keyMapping, "bomb")
+        self.K_UP    = config.getint(keyMapping, "up")
+        self.K_DOWN  = config.getint(keyMapping, "down")
+        self.K_RIGHT = config.getint(keyMapping, "right")
+        self.K_LEFT  = config.getint(keyMapping, "left")
+
+    def handleEvent(self, event):
+        if event.type == pygame.KEYDOWN:
+            if event.key == self.K_UP:
+                self.move_up()
+            elif event.key == self.K_DOWN:
+                self.move_down()
+            elif event.key == self.K_RIGHT:
+                self.move_right()
+            elif event.key == self.K_LEFT:
+                self.move_left()
+            if event.key == self.K_BOMB:
+                self.createBomb()
+        if event.type == pygame.KEYUP:
+            if event.key == self.K_UP:
+                self.stop()
+            elif event.key == self.K_DOWN:
+                self.stop()
+            elif event.key == self.K_RIGHT:
+                self.stop()
+            elif event.key == self.K_LEFT:
+                self.stop()
+            if event.key == self.K_BOMB:
+                self.resetBomb()
 
 class KI(player):
     """

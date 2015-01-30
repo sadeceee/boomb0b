@@ -7,6 +7,7 @@ class box(object):
     """
     image = None
     isWall = False
+    isBomb = False
     breakable = False
     deadly = False
 
@@ -24,6 +25,9 @@ class box(object):
 
     def handleEvent(self, event):
         pass
+
+    def destroy(self, gf, x, y):
+        gf.rem(self, x, y)
 
 class stone(box):
 
@@ -57,6 +61,7 @@ class bomb(box):
         super(bomb, self).__init__()
 
         self.isWall = True
+        self.isBomb = True
         self.breakable = True
         self.bombSize = mySize
         self.load("IMG", "bomb.png")
@@ -184,15 +189,23 @@ class explosion(box):
         w = False
         counter = 0
         for x in list:
-            isWall, isBreakable, isDeadly = x
+            obj, isWall, isBomb, isBreakable, isDeadly = x
 
             if isWall:
                 w = True
             if isBreakable:
                 obj = gf.getObjectBreakable(newX, newY, counter)
-                gf.rem(obj, newX, newY)
-                counter -=1
+                if isBomb:
+                    obj.counter == EXPLOSION_EXPAND
+                else:
+                    gf.rem(obj, newX, newY)
             counter += 1
+            
+            # Zerstoerung von Objekten PE
+            # Zerstoert den Spieler auch wenn er auf der Bombe steht
+            # Leider manchmal auch zwei Kisten hintereinander -> TODO
+            #if isBreakable:
+            #    obj.destroy(gf, newX, newY)
         if not w:
             tempType = EXP_CENTER_X
             if(self.type == EXP_INITIAL): # TODO check for Center types as well

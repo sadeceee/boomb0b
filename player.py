@@ -20,7 +20,7 @@ class player(object):
                 Else section name in keymapping, like 'player1'
     """
     def __init__(self):
-        self.bombSize = 2
+        self.bombSize = 5
         self.bombCount = 2
         self.y_runSpeed = 0
         self.x_runSpeed = 0

@@ -99,7 +99,7 @@ class explosion(box):
         self.type = type
         self.direction = myDir
         if self.direction == EXP_INITIAL:
-            self.timer = s * EXP_DURATION
+            self.timer = (s + 1) * EXP_DURATION
         else:
             self.timer = timeLeft
 
@@ -108,7 +108,8 @@ class explosion(box):
         gf.add(self, x, y)
 
     def load(self, dir, filename, type):
-        temp_pic = image_test(self.type)
+        self.filename_anim = pygame.Surface((FIELD_SIZE_WIDTH, FIELD_SIZE_HEIGHT))
+        temp_pic = image_test(type)
 
         if(temp_pic == False):
             raw_image = image_loader(dir, filename)
@@ -138,16 +139,18 @@ class explosion(box):
                 image_saver(EXP_END, self.filename_anim)
         else: self.filename_anim = temp_pic
 
-        # if(self.direction == EXP_UP):
-        #     pass
-        # elif(self.direction == EXP_RIGHT):
-        #     self.filename_anim = pygame.transform.rotate(temp_pic, 90)
-        # elif(self.direction == EXP_DOWN):
-        #     self.filename_anim = pygame.transform.rotate(temp_pic, 180)
-        # elif(self.direction == EXP_LEFT):
-        #         self.filename_anim = pygame.transform.rotate(temp_pic, -90)
+        if(self.direction == EXP_UP):
+            self.filename_anim = pygame.transform.rotate(self.filename_anim, 180)
+        elif(self.direction == EXP_RIGHT):
+            self.filename_anim = pygame.transform.rotate(self.filename_anim, 90)
+        elif(self.direction == EXP_DOWN):
+            pass
+        elif(self.direction == EXP_LEFT):
+            self.filename_anim = pygame.transform.rotate(self.filename_anim, -90)
 
         self.image = self.filename_anim
+        print(self.image)
+        print(images)
 
     def update(self, gf, x, y):
         self.timer -= 1

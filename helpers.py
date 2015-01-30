@@ -29,6 +29,14 @@ def image_test(savename):
 
     return False
 
+def get_image(savename, x, y):
+    images[savename] = pygame.Surface([FIELD_SIZE_WIDTH, FIELD_SIZE_HEIGHT])
+    images[savename].fill(GREEN)
+    images[savename].blit(savename, (0, 0), (x, y, FIELD_SIZE_WIDTH, FIELD_SIZE_HEIGHT))
+    images[savename].set_colorkey(GREEN)
+    images[savename].convert()
+    return images[savename]
+
 def map_loader(dir, filename):
     f = open(os.path.join(dir, filename), "r")
     fields = []

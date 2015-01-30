@@ -207,7 +207,7 @@ class explosion(box):
             if isBreakable:
                 obj = gf.getObjectBreakable(newX, newY, counter)
                 if isBomb:
-                    obj.counter == EXPLOSION_EXPAND
+                    obj.counter = 80
                 else:
                     gf.rem(obj, newX, newY)
             counter += 1

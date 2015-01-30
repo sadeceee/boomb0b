@@ -31,7 +31,7 @@ class gamefield:
                 elif self.fields[y][x] == '3':
                     self.fields[y][x] = []
                     self.fields[y][x].append(boden())
-                    self.fields[y][x].append(player_1())
+                    self.fields[y][x].append(player_x("player1"))
                 elif self.fields[y][x] == '4':
                     self.fields[y][x] = []
                     self.fields[y][x].append(boden())
@@ -43,7 +43,7 @@ class gamefield:
                 elif self.fields[y][x] == '6':
                     self.fields[y][x] = []
                     self.fields[y][x].append(boden())
-                    self.fields[y][x].append(player_2())
+                    self.fields[y][x].append(player_x("player2"))
                 else:
                     self.fields[y][x] = []
                     self.fields[y][x].append(boden())
@@ -75,14 +75,14 @@ class gamefield:
         if (0 <= x <= FIELDS_X) and (0 <= y <= FIELDS_Y):
             templist = []
             for obj in self.fields[y][x]:
-                tempList.append((obj, obj.isWall, obj.isBomb, obj.breakable, obj.deadly))
+                templist.append((obj, obj.isWall, obj.isBomb, obj.breakable, obj.deadly))
 
             return templist
 
     def getObjectBreakable(self, x, y, pos):
         if (0 <= x <= FIELDS_X) and (0 <= y <= FIELDS_Y):
-            pass
-        return self.fields[y][x][pos]
+            return self.fields[y][x][pos]
+        return False
 
     def move(self, obj, to_x, to_y, x, y):
         if (0 <= to_x <= FIELDS_X - 1) and (0 <= to_y <= FIELDS_Y - 1):

@@ -29,6 +29,14 @@ def image_test(savename):
 
     return False
 
+def get_image(savename, x, y):
+    images[savename] = pygame.Surface([FIELD_SIZE_WIDTH, FIELD_SIZE_HEIGHT])
+    images[savename].fill(GREEN)
+    images[savename].blit(savename, (0, 0), (x, y, FIELD_SIZE_WIDTH, FIELD_SIZE_HEIGHT))
+    images[savename].set_colorkey(GREEN)
+    images[savename].convert()
+    return images[savename]
+
 def map_loader(dir, filename):
     f = open(os.path.join(dir, filename), "r")
     fields = []
@@ -40,3 +48,9 @@ def map_loader(dir, filename):
         fields.append(row)
     f.close()
     return fields
+
+def get_center_value(key):
+    if(key in CENTER_DICTIONARY):
+        return CENTER_DICTIONARY[key]
+    else:
+        return (False, False)

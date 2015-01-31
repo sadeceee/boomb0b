@@ -26,6 +26,7 @@ def main():
 
         # Update gamefield and all of his objects
         gf.update()
+        gf.tick()
 
         # Draw gamefield and all of his objects
         gf.draw()

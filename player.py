@@ -3,10 +3,11 @@ import ConfigParser
 import pygame
 from constants import *
 from helpers import image_loader, get_image
+from timer import *
 from box import bomb
 
 
-class player(object):
+class player(object, timer):
     """
     draw(screen, x, y), load(dir, filename), move_up(), move_down(), move_right(), move_left(), stop(), createBomb(), resetBomb()
     """
@@ -24,31 +25,36 @@ class player(object):
         self.y_runSpeed = 0
         self.x_runSpeed = 0
 
+        self.load_timer(0)
+
     def draw(self, screen, x, y):
         screen.blit(self.image, (x, y))
 
     def load(self, dir, filename):
         self.image = image_loader(dir, filename)
 
+    def tick(self):
+        pass
+
     def move_up(self):
-        #if self.x_runSpeed == 0:
-        self.y_runSpeed = -1
-        self.DIRECTION = "B"
+        if self.x_runSpeed == 0:
+            self.y_runSpeed = -1
+            self.DIRECTION = "B"
 
     def move_down(self):
-        #if self.x_runSpeed == 0:
-        self.y_runSpeed = 1
-        self.DIRECTION = "F"
+        if self.x_runSpeed == 0:
+            self.y_runSpeed = 1
+            self.DIRECTION = "F"
 
     def move_right(self):
-        #if self.y_runSpeed == 0:
-        self.x_runSpeed = 1
-        self.DIRECTION = "R"
+        if self.y_runSpeed == 0:
+            self.x_runSpeed = 1
+            self.DIRECTION = "R"
 
     def move_left(self):
-        #if self.y_runSpeed == 0:
-        self.x_runSpeed = -1
-        self.DIRECTION = "L"
+        if self.y_runSpeed == 0:
+            self.x_runSpeed = -1
+            self.DIRECTION = "L"
 
     def stop(self):
         self.y_runSpeed = 0

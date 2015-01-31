@@ -31,9 +31,9 @@ def image_test(savename):
 
 def get_image(savename, x, y):
     images[savename] = pygame.Surface([FIELD_SIZE_WIDTH, FIELD_SIZE_HEIGHT])
-    images[savename].fill(GREEN)
+    images[savename].fill(RED)
     images[savename].blit(savename, (0, 0), (x, y, FIELD_SIZE_WIDTH, FIELD_SIZE_HEIGHT))
-    images[savename].set_colorkey(GREEN)
+    images[savename].set_colorkey(RED)
     images[savename].convert()
     return images[savename]
 

@@ -1,7 +1,9 @@
 from helpers import *
 from constants import *
+from timer import *
 
-class box(object):
+
+class box(object, timer):
     """
     draw(screen, x, y), load(dir, filename), update(gf, x, y), handleEvent(event)
     """
@@ -11,6 +13,8 @@ class box(object):
     breakable = False
     deadly = False
 
+
+
     def __init__(self):
         pass
 
@@ -19,8 +23,12 @@ class box(object):
 
     def load(self, dir, filename):
         self.image = image_loader(dir, filename)
+        self.load_timer(0)
 
     def update(self, gf, x, y):
+        pass
+
+    def tick(self):
         pass
 
     def handleEvent(self, event):
@@ -48,8 +56,38 @@ class crate(box):
         self.isWall = True
         self.breakable = True
 
-        self.load("IMG", "crate.bmp")
+        self.crate_anim = []
+        self.count = 0
+        self.des = False
+        self.load("IMG", "crate.png")
 
+    def update(self, gf, x, y):
+        if self.des == True:
+            gf.rem(self, x, y)
+
+    def load(self, dir, filename):
+        sprite_sheet = image_loader(dir, filename)
+
+        image = get_image(sprite_sheet, 0 * FIELD_SIZE_WIDTH, 0)
+        self.crate_anim.append(image)
+        image = get_image(sprite_sheet, 1 * FIELD_SIZE_WIDTH, 0)
+        self.crate_anim.append(image)
+        image = get_image(sprite_sheet, 2 * FIELD_SIZE_WIDTH, 0)
+        self.crate_anim.append(image)
+
+        self.load_timer(5)
+        self.stop()
+        self.image = self.crate_anim[0]
+
+    def destroy(self, gf, x, y):
+        self.start()
+
+    def tick(self):
+        self.image = self.crate_anim[self.count]
+        self.count += 1
+        if self.count > 2:
+            self.count = 0
+            self.des = True
 
 class bomb(box):
     """
@@ -149,6 +187,7 @@ class explosion(box):
             self.filename_anim = pygame.transform.rotate(self.filename_anim, 90)
 
         self.image = self.filename_anim
+        self.load_timer(0)
 
     def update(self, gf, x, y):
         self.timer -= 1
@@ -209,14 +248,13 @@ class explosion(box):
                 if isBomb:
                     obj.counter = 80
                 else:
-                    gf.rem(obj, newX, newY)
+                    obj.destroy(gf, newX, newY)
             counter += 1
             
             # Zerstoerung von Objekten PE
             # Zerstoert den Spieler auch wenn er auf der Bombe steht
             # Leider manchmal auch zwei Kisten hintereinander -> TODO
-            #if isBreakable:
-            #    obj.destroy(gf, newX, newY)
+            
         if not w:
             tempType = EXP_CENTER_X
             if(self.type == EXP_INITIAL): # TODO check for Center types as well
@@ -229,19 +267,8 @@ class explosion(box):
             return "1"
         return "0"
 
-<<<<<<< Temporary merge branch 1
-        # Zerstoerung von Objekten PE
-        # Zerstoert den Spieler auch wenn er auf der Bombe steht
-=======
-        # Zerstorung von Objekten PE
-        # Zerstort den Spieler auch wenn er auf der Bombe steht
->>>>>>> Temporary merge branch 2
-        # Leider manchmal auch zwei Kisten hintereinander -> TODO
-        #if isBreakable:
-        #    obj.destroy(gf, newX, newY)
-
-    if not w:
-        explosion(gf, s - 1, timeLeft, direction, newX, newY)
+        #if not w:
+        #    explosion(gf, s - 1, timeLeft, direction, newX, newY)
 
 class dummy(box):
 

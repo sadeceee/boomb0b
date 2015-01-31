@@ -1,5 +1,6 @@
 from player import *
 from box import *
+from items import *
 import random
 
 
@@ -44,6 +45,18 @@ class gamefield:
                     self.fields[y][x] = []
                     self.fields[y][x].append(boden())
                     self.fields[y][x].append(player_x("player2"))
+                elif self.fields[y][x] == '7':
+                    self.fields[y][x] = []
+                    self.fields[y][x].append(boden())
+                    self.fields[y][x].append(bomb_item())
+                elif self.fields[y][x] == '8':
+                    self.fields[y][x] = []
+                    self.fields[y][x].append(boden())
+                    self.fields[y][x].append(fire_item())
+                elif self.fields[y][x] == '9':
+                    self.fields[y][x] = []
+                    self.fields[y][x].append(boden())
+                    self.fields[y][x].append(skull_item())
                 else:
                     self.fields[y][x] = []
                     self.fields[y][x].append(boden())
@@ -62,6 +75,13 @@ class gamefield:
                 for obj in self.fields[y][x]:
                     if obj.update(self, x, y):
                         self.rem(obj, x, y)
+
+    def tick(self):
+        for y in range(FIELDS_Y):
+            for x in range(FIELDS_X):
+                for obj in self.fields[y][x]:
+                    if obj._tickable:
+                        obj._tick ()
 
     def add(self, obj, x, y):
         if (0 <= x <= FIELDS_X) and (0 <= y <= FIELDS_Y):

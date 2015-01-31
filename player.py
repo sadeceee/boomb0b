@@ -1,5 +1,8 @@
+import os
 import ConfigParser
-from helpers import *
+import pygame
+from constants import *
+from helpers import image_loader, get_image
 from box import bomb
 
 
@@ -15,12 +18,8 @@ class player(object):
     deadly    = False
     putBomb   = False
 
-    """
-    keyMapping: None for KI
-                Else section name in keymapping, like 'player1'
-    """
     def __init__(self):
-        self.bombSize = 5
+        self.bombSize = 2
         self.bombCount = 2
         self.y_runSpeed = 0
         self.x_runSpeed = 0
@@ -32,24 +31,24 @@ class player(object):
         self.image = image_loader(dir, filename)
 
     def move_up(self):
-        if self.x_runSpeed == 0:
-            self.y_runSpeed = -1
-            self.DIRECTION = "B"
+        #if self.x_runSpeed == 0:
+        self.y_runSpeed = -1
+        self.DIRECTION = "B"
 
     def move_down(self):
-        if self.x_runSpeed == 0:
-            self.y_runSpeed = 1
-            self.DIRECTION = "F"
+        #if self.x_runSpeed == 0:
+        self.y_runSpeed = 1
+        self.DIRECTION = "F"
 
     def move_right(self):
-        if self.y_runSpeed == 0:
-            self.x_runSpeed = 1
-            self.DIRECTION = "R"
+        #if self.y_runSpeed == 0:
+        self.x_runSpeed = 1
+        self.DIRECTION = "R"
 
     def move_left(self):
-        if self.y_runSpeed == 0:
-            self.x_runSpeed = -1
-            self.DIRECTION = "L"
+        #if self.y_runSpeed == 0:
+        self.x_runSpeed = -1
+        self.DIRECTION = "L"
 
     def stop(self):
         self.y_runSpeed = 0
@@ -137,7 +136,14 @@ class player_x(player):
 
         self.image = self.WALKING_F[0]
 
-        self.rect = self.image.get_rect()
+    def loadKeys(self, keyMapping):
+        config = ConfigParser.ConfigParser()
+        config.read(os.path.join("DATA", "keyMapping.ini"))
+        self.K_BOMB  = config.getint(keyMapping, "bomb")
+        self.K_UP    = config.getint(keyMapping, "up")
+        self.K_DOWN  = config.getint(keyMapping, "down")
+        self.K_RIGHT = config.getint(keyMapping, "right")
+        self.K_LEFT  = config.getint(keyMapping, "left")
 
     def update(self, gf, x, y):
         # Put bomb
@@ -172,15 +178,6 @@ class player_x(player):
         elif self.DIRECTION == "L":
             frame = x % len(self.WALKING_F)
             self.image = self.WALKING_L[frame]
-
-    def loadKeys(self, keyMapping):
-        config = ConfigParser.ConfigParser()
-        config.read(os.path.join("DATA", "keyMapping.ini"))
-        self.K_BOMB  = config.getint(keyMapping, "bomb")
-        self.K_UP    = config.getint(keyMapping, "up")
-        self.K_DOWN  = config.getint(keyMapping, "down")
-        self.K_RIGHT = config.getint(keyMapping, "right")
-        self.K_LEFT  = config.getint(keyMapping, "left")
 
     def handleEvent(self, event):
         if event.type == pygame.KEYDOWN:

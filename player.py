@@ -25,62 +25,6 @@ class player(object, timer):
         self.y_runSpeed = 0
         self.x_runSpeed = 0
 
-        self.load_timer(0)
-
-    def draw(self, screen, x, y):
-        screen.blit(self.image, (x, y))
-
-    def load(self, dir, filename):
-        self.image = image_loader(dir, filename)
-
-    def tick(self):
-        pass
-
-    def move_up(self):
-        if self.x_runSpeed == 0:
-            self.y_runSpeed = -1
-            self.DIRECTION = "B"
-
-    def move_down(self):
-        if self.x_runSpeed == 0:
-            self.y_runSpeed = 1
-            self.DIRECTION = "F"
-
-    def move_right(self):
-        if self.y_runSpeed == 0:
-            self.x_runSpeed = 1
-            self.DIRECTION = "R"
-
-    def move_left(self):
-        if self.y_runSpeed == 0:
-            self.x_runSpeed = -1
-            self.DIRECTION = "L"
-
-    def stop(self):
-        self.y_runSpeed = 0
-        self.x_runSpeed = 0
-
-    def createBomb(self):
-        self.putBomb = True
-
-    def resetBomb(self):
-        self.putBomb = False
-
-    def destroy(self, gf, x, y):
-        gf.rem(self, x, y)
-
-
-class player_x(player):
-    # Moving keys
-    K_BOMB    = -1
-    K_UP      = -1
-    K_DOWN    = -1
-    K_RIGHT   = -1
-    K_LEFT    = -1
-
-    def __init__(self, keyMapping = None):
-        super(player_x, self).__init__()
-
         self.DIRECTION = "F"
         self.WALKING_F = []
         self.WALKING_B = []
@@ -89,11 +33,8 @@ class player_x(player):
         self.frame = 0
         self.ANIMATION_SPEED = 10
 
-        self.loadKeys(keyMapping)
-        self.load("IMG", "player.png")
-
-        if (keyMapping != None):
-            self.loadKeys(keyMapping)
+    def draw(self, screen, x, y):
+        screen.blit(self.image, (x, y))
 
     def load(self, dir, filename):
         sprite_sheet = image_loader(dir, filename)
@@ -144,7 +85,60 @@ class player_x(player):
 
         self.image = self.WALKING_F[0]
         self.load_timer(self.ANIMATION_SPEED)
-        self.timer_stop()
+
+    def tick(self):
+        pass
+
+    def move_up(self):
+        if self.x_runSpeed == 0:
+            self.y_runSpeed = -1
+            self.DIRECTION = "B"
+
+    def move_down(self):
+        if self.x_runSpeed == 0:
+            self.y_runSpeed = 1
+            self.DIRECTION = "F"
+
+    def move_right(self):
+        if self.y_runSpeed == 0:
+            self.x_runSpeed = 1
+            self.DIRECTION = "R"
+
+    def move_left(self):
+        if self.y_runSpeed == 0:
+            self.x_runSpeed = -1
+            self.DIRECTION = "L"
+
+    def stop(self):
+        self.y_runSpeed = 0
+        self.x_runSpeed = 0
+
+    def createBomb(self):
+        self.putBomb = True
+
+    def resetBomb(self):
+        self.putBomb = False
+
+    def destroy(self, gf, x, y):
+        gf.rem(self, x, y)
+
+
+class player_x(player):
+    # Moving keys
+    K_BOMB    = -1
+    K_UP      = -1
+    K_DOWN    = -1
+    K_RIGHT   = -1
+    K_LEFT    = -1
+
+    def __init__(self, keyMapping = None):
+        super(player_x, self).__init__()
+
+        self.loadKeys(keyMapping)
+        self.load("IMG", "player.png")
+
+        if (keyMapping != None):
+            self.loadKeys(keyMapping)
 
     def loadKeys(self, keyMapping):
         config = ConfigParser.ConfigParser()
@@ -243,7 +237,6 @@ class KI(player):
         super(KI, self).__init__()
 
         self.load("IMG", "KI.png")
-
 
     def update(self, gf, x, y):
         pass

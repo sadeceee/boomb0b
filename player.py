@@ -35,12 +35,14 @@ class player(object, timer):
         self.frame = 0
         self.ANIMATION_SPEED = 10
 
-    def init_position(self, x, y):
+    def init_position(self, gf, x, y):
         self.x = x
         self.y = y
+        gf.scroll(self, self.x/64, self.y/64)
 
-    def draw(self, screen, x, y):
-        screen.blit(self.image, (x, y))
+
+    def draw(self, screen):
+        screen.blit(self.image, (self.x, self.y))
 
     def load(self, dir, filename):
         sprite_sheet = image_loader(dir, filename)
@@ -163,7 +165,7 @@ class player_x(player):
         # Put bomb
         if self.putBomb:
             self.resetBomb()
-            bomb(gf, self.bombSize, x, y)
+            bomb(gf, self.bombSize, self.x, self.y)
 
         # Move player
         list = gf.checkPosition(x+self.x_runSpeed, y+self.y_runSpeed)
@@ -175,8 +177,7 @@ class player_x(player):
                 w = True
 
         if not w:
-            gf.move(self, x+self.x_runSpeed, y+self.y_runSpeed, x, y)
-            gf.scroll(self, x, y)
+            gf.move(self, (self.x/64)+self.x_runSpeed, (self.y/64)+self.y_runSpeed, x, y)
             self.x_runSpeed = 0
             self.y_runSpeed = 0
 
@@ -247,6 +248,8 @@ class KI(player):
 
     def __init__(self):
         super(KI, self).__init__()
+
+        self.name = "KI"
 
         self.load("IMG", "KI.png")
 

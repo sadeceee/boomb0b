@@ -14,16 +14,14 @@ class box(object, timer):
     deadly = False
 
     def __init__(self):
-        self.x = 0
-        self.y = 0
         pass
 
-    def init_position(self, x, y):
+    def init_position(self, gf, x, y):
         self.x = x
         self.y = y
 
-    def draw(self, screen, x, y):
-        screen.blit(self.image, (x, y))
+    def draw(self, screen):
+        screen.blit(self.image, (self.x, self.y))
 
     def load(self, dir, filename):
         self.image = image_loader(dir, filename)
@@ -109,7 +107,7 @@ class bomb(box):
         self.bombSize = mySize
         self.load("IMG", "bomb.png")
 
-        gf.add(self, x, y)
+        gf.add(self, x/64, y/64)
 
     def update(self, gf, x, y):
         self.counter += 1

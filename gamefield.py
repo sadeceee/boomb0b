@@ -73,22 +73,22 @@ class gamefield:
         for y in range(FIELDS_Y):
             for x in range(FIELDS_X):
                 for obj in self.fields[y][x]:
-                    obj.init_position((x*FIELD_SIZE_WIDTH), (y*FIELD_SIZE_HEIGHT))
+                    obj.init_position(self, (x*FIELD_SIZE_WIDTH), (y*FIELD_SIZE_HEIGHT))
 
     def draw(self):
         for y in range(FIELDS_Y):
             for x in range(FIELDS_X):
                 for obj in self.fields[y][x]:
-                    obj.draw(self.c_screen, (x*FIELD_SIZE_WIDTH), (y*FIELD_SIZE_HEIGHT))
+                    obj.draw(self.c_screen)
 
     def sidescroll(self, scroll_x, scroll_y):
         self.worldscroll_x += scroll_x
         self.worldscroll_y += scroll_y
-
         for y in range(FIELDS_Y):
             for x in range(FIELDS_X):
                 for obj in self.fields[y][x]:
-                    self.move(obj, x+scroll_x, y+scroll_y, x, y)
+                    obj.x += scroll_x*64
+                    obj.y += scroll_y*64
 
     def update(self):
         for y in range(FIELDS_Y):
@@ -107,6 +107,7 @@ class gamefield:
     def add(self, obj, x, y):
         if (0 <= x <= FIELDS_X) and (0 <= y <= FIELDS_Y):
             self.fields[y][x].append(obj)
+            obj.init_position(self, (x*FIELD_SIZE_WIDTH), (y*FIELD_SIZE_HEIGHT))
 
     def rem(self, obj, x, y):
         if (0 <= x <= FIELDS_X) and (0 <= y <= FIELDS_Y):
@@ -130,15 +131,14 @@ class gamefield:
             self.add(obj, to_x, to_y)
 
     def scroll(self, obj, x, y):
-        if  obj.name == "player2":
-            if x >= 7:
-                self.diffx = x - 7
-                x = 7
+        if obj.name == "player2":
+            if x >= 6:
+                self.diffx = x - 6
+                x = 6
                 self.sidescroll(-self.diffx, -self.diffy)
-                print self.diffx
-            elif y >= 7:
-                self.diffy = y - 7
-                y = 7
+            elif y >= 6:
+                self.diffy = y - 6
+                y = 6
                 self.sidescroll(-self.diffx, -self.diffy)
 
     def handleEvent(self, event):

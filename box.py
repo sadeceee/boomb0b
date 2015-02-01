@@ -57,8 +57,9 @@ class crate(box):
         self.breakable = True
 
         self.crate_anim = []
-        self.count = 0
+        self.count = 1
         self.des = False
+        self.ANIMATION_SPEED = 5
         self.load("IMG", "crate.png")
 
     def update(self, gf, x, y):
@@ -75,12 +76,12 @@ class crate(box):
         image = get_image(sprite_sheet, 2 * FIELD_SIZE_WIDTH, 0)
         self.crate_anim.append(image)
 
-        self.load_timer(5)
-        self.stop()
+        self.load_timer(self.ANIMATION_SPEED)
+        self.timer_stop()
         self.image = self.crate_anim[0]
 
     def destroy(self, gf, x, y):
-        self.start()
+        self.timer_start()
 
     def tick(self):
         self.image = self.crate_anim[self.count]

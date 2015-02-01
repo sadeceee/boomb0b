@@ -86,6 +86,8 @@ class player_x(player):
         self.WALKING_B = []
         self.WALKING_R = []
         self.WALKING_L = []
+        self.frame = 0
+        self.ANIMATION_SPEED = 10
 
         self.loadKeys(keyMapping)
         self.load("IMG", "player.png")
@@ -141,6 +143,8 @@ class player_x(player):
         self.WALKING_L.append(image)
 
         self.image = self.WALKING_F[0]
+        self.load_timer(self.ANIMATION_SPEED)
+        self.timer_stop()
 
     def loadKeys(self, keyMapping):
         config = ConfigParser.ConfigParser()
@@ -171,41 +175,62 @@ class player_x(player):
             self.x_runSpeed = 0
             self.y_runSpeed = 0
 
+    def tick(self):
         # Animation
         if self.DIRECTION == "F":
-            frame = y % len(self.WALKING_F)
-            self.image = self.WALKING_F[frame]
+            self.image = self.WALKING_F[self.frame]
+            self.frame += 1
+            if self.frame > 3:
+                self.frame = 0
         elif self.DIRECTION == "B":
-            frame = y % len(self.WALKING_F)
-            self.image = self.WALKING_B[frame]
+            self.image = self.WALKING_B[self.frame]
+            self.frame += 1
+            if self.frame > 3:
+                self.frame = 0
         elif self.DIRECTION == "R":
-            frame = x % len(self.WALKING_F)
-            self.image = self.WALKING_R[frame]
+            self.image = self.WALKING_R[self.frame]
+            self.frame += 1
+            if self.frame > 3:
+                self.frame = 0
         elif self.DIRECTION == "L":
-            frame = x % len(self.WALKING_F)
-            self.image = self.WALKING_L[frame]
+            self.image = self.WALKING_L[self.frame]
+            self.frame += 1
+            if self.frame > 3:
+                self.frame = 0
 
     def handleEvent(self, event):
         if event.type == pygame.KEYDOWN:
             if event.key == self.K_UP:
                 self.move_up()
+                self.timer_start()
+                self.image = self.WALKING_B[0]
             elif event.key == self.K_DOWN:
                 self.move_down()
+                self.timer_start()
+                self.image = self.WALKING_F[0]
             elif event.key == self.K_RIGHT:
                 self.move_right()
+                self.timer_start()
+                self.image = self.WALKING_R[0]
             elif event.key == self.K_LEFT:
                 self.move_left()
+                self.timer_start()
+                self.image = self.WALKING_L[0]
             if event.key == self.K_BOMB:
                 self.createBomb()
         if event.type == pygame.KEYUP:
             if event.key == self.K_UP:
                 self.stop()
+                self.timer_stop()
             elif event.key == self.K_DOWN:
                 self.stop()
+                self.timer_stop()
             elif event.key == self.K_RIGHT:
                 self.stop()
+                self.timer_stop()
             elif event.key == self.K_LEFT:
                 self.stop()
+                self.timer_stop()
             if event.key == self.K_BOMB:
                 self.resetBomb()
 

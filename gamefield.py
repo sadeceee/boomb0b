@@ -80,7 +80,7 @@ class gamefield:
         for y in range(FIELDS_Y):
             for x in range(FIELDS_X):
                 for obj in self.fields[y][x]:
-                    if obj._tickable:
+                    if obj.tickable:
                         obj._tick ()
 
     def add(self, obj, x, y):

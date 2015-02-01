@@ -59,7 +59,7 @@ class crate(box):
         self.crate_anim = []
         self.count = 1
         self.des = False
-        self.ANIMATION_SPEED = 5
+        self.ANIMATION_SPEED = 4
         self.load("IMG", "crate.png")
 
     def update(self, gf, x, y):
@@ -84,11 +84,12 @@ class crate(box):
         self.timer_start()
 
     def tick(self):
-        self.image = self.crate_anim[self.count]
-        self.count += 1
-        if self.count > 2:
+        if self.count <= 2:
+            self.image = self.crate_anim[self.count]
+        elif self.count > 3:
             self.count = 0
             self.des = True
+        self.count += 1
 
 class bomb(box):
     """

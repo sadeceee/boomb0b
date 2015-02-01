@@ -9,7 +9,7 @@ from box import bomb
 
 class player(object, timer):
     """
-    draw(screen, x, y), load(dir, filename), move_up(), move_down(), move_right(), move_left(), stop(), createBomb(), resetBomb()
+    draw(screen, x, y), load(dir, filename), tick(), move_up(), move_down(), move_right(), move_left(), stop(), createBomb(), resetBomb(), destory()
     """
     image     = None
     rect      = None
@@ -124,6 +124,9 @@ class player(object, timer):
 
 
 class player_x(player):
+    """
+    loadKeys(), update(), tick(), handleEvent()
+    """
     # Moving keys
     K_BOMB    = -1
     K_UP      = -1

@@ -12,6 +12,11 @@ class gamefield:
     fields = []
     c_screen = None
 
+    worldscroll_x = 0
+    worldscroll_y = 0
+    diffx = 0
+    diffy = 0
+
     def __init__(self, screen):
         random.seed()
         self.fields = map_loader("MAP", "default.map")
@@ -62,12 +67,28 @@ class gamefield:
                     self.fields[y][x].append(boden())
 
         self.c_screen = screen
+        self.init_position()
+
+    def init_position(self):
+        for y in range(FIELDS_Y):
+            for x in range(FIELDS_X):
+                for obj in self.fields[y][x]:
+                    obj.init_position((x*FIELD_SIZE_WIDTH), (y*FIELD_SIZE_HEIGHT))
 
     def draw(self):
         for y in range(FIELDS_Y):
             for x in range(FIELDS_X):
                 for obj in self.fields[y][x]:
                     obj.draw(self.c_screen, (x*FIELD_SIZE_WIDTH), (y*FIELD_SIZE_HEIGHT))
+
+    def sidescroll(self, scroll_x, scroll_y):
+        self.worldscroll_x += scroll_x
+        self.worldscroll_y += scroll_y
+
+        for y in range(FIELDS_Y):
+            for x in range(FIELDS_X):
+                for obj in self.fields[y][x]:
+                    self.move(obj, x+scroll_x, y+scroll_y, x, y)
 
     def update(self):
         for y in range(FIELDS_Y):
@@ -96,7 +117,6 @@ class gamefield:
             templist = []
             for obj in self.fields[y][x]:
                 templist.append((obj, obj.isWall, obj.isBomb, obj.breakable, obj.deadly))
-
             return templist
 
     def getObjectBreakable(self, x, y, pos):
@@ -106,8 +126,20 @@ class gamefield:
 
     def move(self, obj, to_x, to_y, x, y):
         if (0 <= to_x <= FIELDS_X - 1) and (0 <= to_y <= FIELDS_Y - 1):
-           self.rem(obj, x, y)
-           self.add(obj, to_x, to_y)
+            self.rem(obj, x, y)
+            self.add(obj, to_x, to_y)
+
+    def scroll(self, obj, x, y):
+        if  obj.name == "player2":
+            if x >= 7:
+                self.diffx = x - 7
+                x = 7
+                self.sidescroll(-self.diffx, -self.diffy)
+                print self.diffx
+            elif y >= 7:
+                self.diffy = y - 7
+                y = 7
+                self.sidescroll(-self.diffx, -self.diffy)
 
     def handleEvent(self, event):
         for y in range(FIELDS_Y):

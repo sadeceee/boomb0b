@@ -22,6 +22,8 @@ class player(object, timer):
     def __init__(self):
         self.bombSize = 2
         self.bombCount = 2
+        self.x = 0
+        self.y = 0
         self.y_runSpeed = 0
         self.x_runSpeed = 0
 
@@ -32,6 +34,10 @@ class player(object, timer):
         self.WALKING_L = []
         self.frame = 0
         self.ANIMATION_SPEED = 10
+
+    def init_position(self, x, y):
+        self.x = x
+        self.y = y
 
     def draw(self, screen, x, y):
         screen.blit(self.image, (x, y))
@@ -137,6 +143,7 @@ class player_x(player):
     def __init__(self, keyMapping = None):
         super(player_x, self).__init__()
 
+        self.name = keyMapping
         self.loadKeys(keyMapping)
         self.load("IMG", "player.png")
 
@@ -169,31 +176,32 @@ class player_x(player):
 
         if not w:
             gf.move(self, x+self.x_runSpeed, y+self.y_runSpeed, x, y)
+            gf.scroll(self, x, y)
             self.x_runSpeed = 0
             self.y_runSpeed = 0
 
     def tick(self):
         # Animation
         if self.DIRECTION == "F":
+            self.frame += 1
+            if self.frame > 3:
+                self.frame = 0
             self.image = self.WALKING_F[self.frame]
-            self.frame += 1
-            if self.frame > 3:
-                self.frame = 0
         elif self.DIRECTION == "B":
+            self.frame += 1
+            if self.frame > 3:
+                self.frame = 0
             self.image = self.WALKING_B[self.frame]
-            self.frame += 1
-            if self.frame > 3:
-                self.frame = 0
         elif self.DIRECTION == "R":
+            self.frame += 1
+            if self.frame > 3:
+                self.frame = 0
             self.image = self.WALKING_R[self.frame]
-            self.frame += 1
-            if self.frame > 3:
-                self.frame = 0
         elif self.DIRECTION == "L":
-            self.image = self.WALKING_L[self.frame]
             self.frame += 1
             if self.frame > 3:
                 self.frame = 0
+            self.image = self.WALKING_L[self.frame]
 
     def handleEvent(self, event):
         if event.type == pygame.KEYDOWN:
@@ -230,6 +238,7 @@ class player_x(player):
                 self.timer_stop()
             if event.key == self.K_BOMB:
                 self.resetBomb()
+
 
 class KI(player):
     """

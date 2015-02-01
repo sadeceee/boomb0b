@@ -13,10 +13,14 @@ class box(object, timer):
     breakable = False
     deadly = False
 
-
-
     def __init__(self):
+        self.x = 0
+        self.y = 0
         pass
+
+    def init_position(self, x, y):
+        self.x = x
+        self.y = y
 
     def draw(self, screen, x, y):
         screen.blit(self.image, (x, y))
@@ -46,7 +50,6 @@ class stone(box):
         self.breakable = False
 
         self.load("IMG", "stone.bmp")
-
 
 class crate(box):
 

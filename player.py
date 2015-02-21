@@ -15,6 +15,7 @@ class player(object, timer):
     rect      = None
     isWall    = False
     isBomb    = False
+    isItem    = False
     breakable = True
     deadly    = False
     bombs     = PLAYER_MAX_BOMBS
@@ -87,6 +88,18 @@ class player(object, timer):
     def destroy(self, gf, x, y):
         gf.rem(self, x, y)
 
+    def increaseBombSize(self):
+        self.bombSize += 1
+
+    def increaseMaxBombs(self):
+        self.maxBombs += 1
+        self.bombs += 1
+
+    def poisonPlayer(self):
+        self.bombSize = 1
+        self.maxBombs = 1
+        self.bombs = min(self.bombs, 1)
+
 
 class player_x(player):
     """
@@ -118,14 +131,15 @@ class player_x(player):
         self.K_LEFT  = config.getint(keyMapping, "left")
 
     def update(self, gf, x, y):
-
         # Move player
+        """ CAUTION: when movement is changed, take care of new x, y values """
         list = gf.checkPosition(x+self.x_runSpeed, y+self.y_runSpeed)
         w = False
         d = False
         b = False
+        itemList = []
         for i in list:
-            obj, isWall, isBomb, isBreakable, isDeadly = i
+            obj, isWall, isBomb, isItem, isBreakable, isDeadly = i
 
             if isWall:
                 w = True
@@ -133,6 +147,8 @@ class player_x(player):
                 d = True
             if isBomb:
                 b = True
+            if isItem:
+                itemList.append(obj)
 
         # Put bomb
         if self.putBomb:
@@ -148,6 +164,11 @@ class player_x(player):
             if(self.x_runSpeed != 0 or self.y_runSpeed != 0):
                 if not w:
                     gf.move(self, x+self.x_runSpeed, y+self.y_runSpeed, x, y)
+
+                    for item in itemList:
+                        """ CAUTION: when movement is changed, take care of new x, y values """
+                        self = item.destroyNew(gf, x+self.x_runSpeed, y+self.y_runSpeed, self)
+
                     self.x_runSpeed = 0
                     self.y_runSpeed = 0
 

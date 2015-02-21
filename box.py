@@ -10,7 +10,7 @@ class box(object, timer):
     image = None
     isWall = False
     isBomb = False
-    isPlayer = False
+    isItem = False
     breakable = False
     deadly = False
 
@@ -208,7 +208,7 @@ class explosion(box):
             self.load("IMG", "bomb_animation.png", myType, myDirection)
         list = gf.checkPosition(x, y)
         for item in list:
-            obj, isWall, isBomb, isBreakable, isDeadly = item
+            obj, isWall, isBomb, isItem, isBreakable, isDeadly = item
             if isBreakable:
                 obj.destroy(gf, x, y)
 
@@ -216,7 +216,7 @@ class explosion(box):
         list = gf.checkPosition(newX, newY)
         w = False
         for x in list:
-            obj, isWall, isBomb, isBreakable, isDeadly = x
+            obj, isWall, isBomb, isItem, isBreakable, isDeadly = x
 
             if isWall:
                 w = True

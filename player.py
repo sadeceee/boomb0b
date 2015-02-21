@@ -5,6 +5,7 @@ from constants import *
 from helpers import image_loader, get_image, loadhelper
 from timer import *
 from box import bomb
+from astar import *
 
 
 class player(object, timer):
@@ -86,7 +87,8 @@ class player(object, timer):
         self.bombs = min(self.bombs + 1, self.maxBombs)
 
     def destroy(self, gf, x, y):
-        gf.rem(self, x, y)
+        #gf.rem(self, x, y)
+        pass
 
     def increaseBombSize(self):
         self.bombSize += 1
@@ -223,13 +225,73 @@ class KI(player):
 
     """
 
+    path = ""
+
     def __init__(self):
         super(KI, self).__init__()
 
+        self.dx = [1, 0, -1, 0]
+        self.dy = [0, 1, 0, -1]
+
+
         self.load("IMG", "KI.png")
+        self.timer_start()
+
 
     def update(self, gf, x, y):
-        pass
+        # Move player
+        list = gf.checkPosition(x+self.x_runSpeed, y+self.y_runSpeed)
+        w = False
+        d = False
+        itemList = []
+        for i in list:
+            obj, isWall, isBomb, isItem, isBreakable, isDeadly = i
+
+            if isWall:
+                w = True
+            if isDeadly:
+                d = True
+            if isItem:
+                itemList.append(obj)
+        if d:
+            self.destroy(gf, x, y)
+        else:
+            if self.path != "2222":
+
+
+                route = findPath(gf.map, 4, self.dx, self.dy, x, y, 5, 9)
+                self.path = route.search()
+
+            if not w:
+
+
+                gf.move(self, x+self.x_runSpeed, y+self.y_runSpeed, x, y)
+
+                for item in itemList:
+                    """ CAUTION: when movement is changed, take care of new x, y values """
+                    self = item.destroyNew(gf, x+self.x_runSpeed, y+self.y_runSpeed, self)
+
+                self.x_runSpeed = 0
+                self.y_runSpeed = 0
+
+
+    def tick(self):
+        direction = self.left(self.path, 1)
+
+
+        if direction == "2":
+            self.move_to_direction("L", -PLAYER_RUNSPEED, True)
+        elif direction == "3":
+            self.move_to_direction("B", -PLAYER_RUNSPEED, False)
+        elif direction == "0":
+            self.move_to_direction("R", PLAYER_RUNSPEED, True)
+        elif direction == "1":
+            self.move_to_direction("F", PLAYER_RUNSPEED, False)
+
+        self.path = ""
 
     def handleEvent(self, event):
         pass
+
+    def left(self, s, amount):
+        return s[:amount]

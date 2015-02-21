@@ -70,12 +70,7 @@ class crate(box):
     def load(self, dir, filename):
         sprite_sheet = image_loader(dir, filename)
 
-        image = get_image(sprite_sheet, 0 * FIELD_SIZE_WIDTH, 0)
-        self.crate_anim.append(image)
-        image = get_image(sprite_sheet, 1 * FIELD_SIZE_WIDTH, 0)
-        self.crate_anim.append(image)
-        image = get_image(sprite_sheet, 2 * FIELD_SIZE_WIDTH, 0)
-        self.crate_anim.append(image)
+        loadhelper(sprite_sheet, [0, 1, 2], self.crate_anim, False)
 
         self.load_timer(self.ANIMATION_SPEED)
         self.timer_stop()
@@ -98,13 +93,15 @@ class bomb(box):
     """
     bombSize = 0
     counter = 0
-    def __init__(self, gf, mySize, x, y):
+    mPlayer = None
+    def __init__(self, gf, player, mySize, x, y):
         super(bomb, self).__init__()
 
         self.isWall = True
         self.isBomb = True
         self.breakable = True
         self.bombSize = mySize
+        self.mPlayer = player
         self.load("IMG", "bomb.png")
 
         gf.add(self, x, y)
@@ -112,6 +109,7 @@ class bomb(box):
     def update(self, gf, x, y):
         self.counter += 1
         if(self.counter == BOMB_TIMER):
+            self.mPlayer.giveBomb()
             explosion(gf, self.bombSize, -1, EXP_INITIAL, EXP_INITIAL, x, y)
             return True
         return False
@@ -154,30 +152,25 @@ class explosion(box):
 
         if(temp_pic == False):
             raw_image = image_loader(dir, filename)
+            pos = 6
             if(type == EXP_INITIAL):
-                self.filename_anim.blit(raw_image, (0,0), (6 * FIELD_SIZE_WIDTH, 0, FIELD_SIZE_WIDTH, FIELD_SIZE_HEIGHT))
-                image_saver(EXP_INITIAL, self.filename_anim)
+                pos = 6
             elif(type == EXP_CENTER_X):
-                self.filename_anim.blit(raw_image, (0,0), (4 * FIELD_SIZE_WIDTH, 0, FIELD_SIZE_WIDTH, FIELD_SIZE_HEIGHT))
-                image_saver(EXP_CENTER_X, self.filename_anim)
+                pos = 4
             elif(type == EXP_CENTER_T):
-                self.filename_anim.blit(raw_image, (0,0), (5 * FIELD_SIZE_WIDTH, 0, FIELD_SIZE_WIDTH, FIELD_SIZE_HEIGHT))
-                image_saver(EXP_CENTER_T, self.filename_anim)
+                pos = 5
             elif(type == EXP_CENTER_L):
-                self.filename_anim.blit(raw_image, (0,0), (3 * FIELD_SIZE_WIDTH, 0, FIELD_SIZE_WIDTH, FIELD_SIZE_HEIGHT))
-                image_saver(EXP_CENTER_L, self.filename_anim)
+                pos = 3
             elif(type == EXP_CENTER_B):
-                self.filename_anim.blit(raw_image, (0,0), (1 * FIELD_SIZE_WIDTH, 0, FIELD_SIZE_WIDTH, FIELD_SIZE_HEIGHT))
-                image_saver(EXP_CENTER_B, self.filename_anim)
+                pos = 1
             elif(type == EXP_CENTER_U):
-                self.filename_anim.blit(raw_image, (0,0), (0 * FIELD_SIZE_WIDTH, 0, FIELD_SIZE_WIDTH, FIELD_SIZE_HEIGHT))
-                image_saver(EXP_CENTER_U, self.filename_anim)
+                pos = 0
             elif(type == EXP_BRIDGE):
-                self.filename_anim.blit(raw_image, (0,0), (1 * FIELD_SIZE_WIDTH, 0, FIELD_SIZE_WIDTH, FIELD_SIZE_HEIGHT))
-                image_saver(EXP_BRIDGE, self.filename_anim)
+                pos = 1
             elif(type == EXP_END):
-                self.filename_anim.blit(raw_image, (0,0), (2 * FIELD_SIZE_WIDTH, 0, FIELD_SIZE_WIDTH, FIELD_SIZE_HEIGHT))
-                image_saver(EXP_END, self.filename_anim)
+                pos = 2
+            self.filename_anim.blit(raw_image, (0,0), (pos * FIELD_SIZE_WIDTH, 0, FIELD_SIZE_WIDTH, FIELD_SIZE_HEIGHT))
+            image_saver(type, self.filename_anim)
         else: self.filename_anim = temp_pic
 
         if(direction == EXP_UP):

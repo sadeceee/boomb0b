@@ -54,3 +54,9 @@ def get_center_value(key):
         return CENTER_DICTIONARY[key]
     else:
         return (False, False)
+
+def loadhelper(sprite_sheet, list, animlist, flip):
+        for x in list:
+            image = get_image(sprite_sheet, x * FIELD_SIZE_WIDTH, 0)
+            if flip: image = pygame.transform.flip(image, True, False)
+            animlist.append(image)

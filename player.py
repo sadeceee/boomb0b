@@ -2,7 +2,7 @@ import os
 import ConfigParser
 import pygame
 from constants import *
-from helpers import image_loader, get_image
+from helpers import image_loader, get_image, loadhelper
 from timer import *
 from box import bomb
 
@@ -18,11 +18,12 @@ class player(object, timer):
     isPlayer  = True
     breakable = True
     deadly    = False
-    putBomb   = False
+    bombs   = PLAYER_MAX_BOMBS
+    putBomb = False
 
     def __init__(self):
-        self.bombSize = 2
-        self.bombCount = 2
+        self.bombSize = PLAYER_BOMB_SIZE
+        self.maxBombs = PLAYER_MAX_BOMBS
         self.y_runSpeed = 0
         self.x_runSpeed = 0
 
@@ -41,48 +42,16 @@ class player(object, timer):
         sprite_sheet = image_loader(dir, filename)
 
         # Front
-        image = get_image(sprite_sheet, 0 * FIELD_SIZE_WIDTH, 0)
-        self.WALKING_F.append(image)
-        image = get_image(sprite_sheet, 1 * FIELD_SIZE_WIDTH, 0)
-        self.WALKING_F.append(image)
-        image = get_image(sprite_sheet, 0 * FIELD_SIZE_WIDTH, 0)
-        self.WALKING_F.append(image)
-        image = get_image(sprite_sheet, 2 * FIELD_SIZE_WIDTH, 0)
-        self.WALKING_F.append(image)
+        loadhelper(sprite_sheet, [0, 1, 0, 2], self.WALKING_F, False)
 
         # Back
-        image = get_image(sprite_sheet, 3 * FIELD_SIZE_WIDTH, 0)
-        self.WALKING_B.append(image)
-        image = get_image(sprite_sheet, 4 * FIELD_SIZE_WIDTH, 0)
-        self.WALKING_B.append(image)
-        image = get_image(sprite_sheet, 3 * FIELD_SIZE_WIDTH, 0)
-        self.WALKING_B.append(image)
-        image = get_image(sprite_sheet, 5 * FIELD_SIZE_WIDTH, 0)
-        self.WALKING_B.append(image)
+        loadhelper(sprite_sheet, [3, 4, 3, 5], self.WALKING_B, False)
 
         # Right
-        image = get_image(sprite_sheet, 6 * FIELD_SIZE_WIDTH, 0)
-        self.WALKING_R.append(image)
-        image = get_image(sprite_sheet, 7 * FIELD_SIZE_WIDTH, 0)
-        self.WALKING_R.append(image)
-        image = get_image(sprite_sheet, 6 * FIELD_SIZE_WIDTH, 0)
-        self.WALKING_R.append(image)
-        image = get_image(sprite_sheet, 8 * FIELD_SIZE_WIDTH, 0)
-        self.WALKING_R.append(image)
+        loadhelper(sprite_sheet, [6, 7, 6, 8], self.WALKING_R, False)
 
         # Left
-        image = get_image(sprite_sheet, 6 * FIELD_SIZE_WIDTH, 0)
-        image = pygame.transform.flip(image, True, False)
-        self.WALKING_L.append(image)
-        image = get_image(sprite_sheet, 7 * FIELD_SIZE_WIDTH, 0)
-        image = pygame.transform.flip(image, True, False)
-        self.WALKING_L.append(image)
-        image = get_image(sprite_sheet, 6 * FIELD_SIZE_WIDTH, 0)
-        image = pygame.transform.flip(image, True, False)
-        self.WALKING_L.append(image)
-        image = get_image(sprite_sheet, 8 * FIELD_SIZE_WIDTH, 0)
-        image = pygame.transform.flip(image, True, False)
-        self.WALKING_L.append(image)
+        loadhelper(sprite_sheet, [6, 7, 6, 8], self.WALKING_L, True)
 
         self.image = self.WALKING_F[0]
         self.load_timer(self.ANIMATION_SPEED)
@@ -119,6 +88,9 @@ class player(object, timer):
 
     def resetBomb(self):
         self.putBomb = False
+
+    def giveBomb(self):
+        self.bombs = min(self.bombs + 1, self.maxBombs)
 
     def destroy(self, gf, x, y):
         gf.rem(self, x, y)
@@ -173,8 +145,9 @@ class player_x(player):
         # Put bomb
         if self.putBomb:
             self.resetBomb()
-            if not b:
-                bomb(gf, self.bombSize, x, y)
+            if (not b and self.bombs > 0):
+                bomb(gf, self,  self.bombSize, x, y)
+                self.bombs = max(self.bombs - 1, 0)
                 return
 
         if d:

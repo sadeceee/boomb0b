@@ -231,26 +231,23 @@ class explosion(box):
             self.load("IMG", "bomb_animation.png", myType, myDirection)
         list = gf.checkPosition(x, y)
         for item in list:
-            obj, isWall, isBomb, isPlayer, isBreakable, isDeadly = item
-            if isPlayer:
+            obj, isWall, isBomb, isBreakable, isDeadly = item
+            if isBreakable:
                 obj.destroy(gf, x, y)
 
     def check_expand(self, gf, direction, newX, newY):
         list = gf.checkPosition(newX, newY)
         w = False
-        counter = 0
         for x in list:
-            obj, isWall, isBomb, isPlayer, isBreakable, isDeadly = x
+            obj, isWall, isBomb, isBreakable, isDeadly = x
 
             if isWall:
                 w = True
             if isBreakable:
-                obj = gf.getObjectBreakable(newX, newY, counter)
                 if isBomb:
                     obj.counter = 80
                 else:
                     obj.destroy(gf, newX, newY)
-            counter += 1
             
             # Zerstoerung von Objekten PE
             # Zerstoert den Spieler auch wenn er auf der Bombe steht

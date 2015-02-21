@@ -95,14 +95,15 @@ class gamefield:
         if (0 <= x <= FIELDS_X) and (0 <= y <= FIELDS_Y):
             templist = []
             for obj in self.fields[y][x]:
-                templist.append((obj, obj.isWall, obj.isBomb, obj.isPlayer, obj.breakable, obj.deadly))
+                templist.append((obj, obj.isWall, obj.isBomb, obj.breakable, obj.deadly))
 
             return templist
 
-    def getObjectBreakable(self, x, y, pos):
-        if (0 <= x <= FIELDS_X) and (0 <= y <= FIELDS_Y):
-            return self.fields[y][x][pos]
-        return False
+    # TOTALLY NOT NEEDED... I GUESS
+    # def getObjectBreakable(self, x, y, pos):
+    #     if (0 <= x <= FIELDS_X) and (0 <= y <= FIELDS_Y):
+    #         return self.fields[y][x][pos]
+    #     return False
 
     def move(self, obj, to_x, to_y, x, y):
         if (0 <= to_x <= FIELDS_X - 1) and (0 <= to_y <= FIELDS_Y - 1):

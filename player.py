@@ -15,11 +15,10 @@ class player(object, timer):
     rect      = None
     isWall    = False
     isBomb    = False
-    isPlayer  = True
     breakable = True
     deadly    = False
-    bombs   = PLAYER_MAX_BOMBS
-    putBomb = False
+    bombs     = PLAYER_MAX_BOMBS
+    putBomb   = False
 
     def __init__(self):
         self.bombSize = PLAYER_BOMB_SIZE
@@ -133,7 +132,7 @@ class player_x(player):
         d = False
         b = False
         for i in list:
-            obj, isWall, isBomb, isPlayer, isBreakable, isDeadly = i
+            obj, isWall, isBomb, isBreakable, isDeadly = i
 
             if isWall:
                 w = True

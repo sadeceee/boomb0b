@@ -95,7 +95,7 @@ class gamefield:
         if (0 <= x <= FIELDS_X) and (0 <= y <= FIELDS_Y):
             templist = []
             for obj in self.fields[y][x]:
-                templist.append((obj, obj.isWall, obj.isBomb, obj.breakable, obj.deadly))
+                templist.append((obj, obj.isWall, obj.isBomb, obj.isPlayer, obj.breakable, obj.deadly))
 
             return templist
 

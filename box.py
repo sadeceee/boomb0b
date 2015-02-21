@@ -10,6 +10,7 @@ class box(object, timer):
     image = None
     isWall = False
     isBomb = False
+    isPlayer = False
     breakable = False
     deadly = False
 
@@ -211,7 +212,7 @@ class explosion(box):
                 newY = y + z[1]
                 key = self.check_expand(gf, z[2], newX, newY)
                 keyList.append(key)
-            self.check_center(keyList)
+            self.check_center(keyList, gf, x, y)
         elif(self.direction == EXP_UP):
             newX = x
             newY = y -1
@@ -229,19 +230,24 @@ class explosion(box):
             newY = y
             self.check_expand(gf, EXP_LEFT, newX, newY)
 
-    def check_center(self, keyList):
+    def check_center(self, keyList, gf, x, y):
         key = ""
         key = key.join(keyList)
         myType, myDirection = get_center_value(key)
         if(myType and myDirection):
             self.load("IMG", "bomb_animation.png", myType, myDirection)
+        list = gf.checkPosition(x, y)
+        for item in list:
+            obj, isWall, isBomb, isPlayer, isBreakable, isDeadly = item
+            if isPlayer:
+                obj.destroy(gf, x, y)
 
     def check_expand(self, gf, direction, newX, newY):
         list = gf.checkPosition(newX, newY)
         w = False
         counter = 0
         for x in list:
-            obj, isWall, isBomb, isBreakable, isDeadly = x
+            obj, isWall, isBomb, isPlayer, isBreakable, isDeadly = x
 
             if isWall:
                 w = True

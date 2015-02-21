@@ -15,6 +15,7 @@ class player(object, timer):
     rect      = None
     isWall    = False
     isBomb    = False
+    isPlayer  = True
     breakable = True
     deadly    = False
     putBomb   = False
@@ -161,16 +162,21 @@ class player_x(player):
         # Move player
         list = gf.checkPosition(x+self.x_runSpeed, y+self.y_runSpeed)
         w = False
+        d = False
         for i in list:
-            obj, isWall, isBomb, isBreakable, isDeadly = i
+            obj, isWall, isBomb, isPlayer, isBreakable, isDeadly = i
 
             if isWall:
                 w = True
-
-        if not w:
-            gf.move(self, x+self.x_runSpeed, y+self.y_runSpeed, x, y)
-            self.x_runSpeed = 0
-            self.y_runSpeed = 0
+            if isDeadly:
+                d = True
+        if d:
+            self.destroy(gf, x, y)
+        else:
+            if not w:
+                gf.move(self, x+self.x_runSpeed, y+self.y_runSpeed, x, y)
+                self.x_runSpeed = 0
+                self.y_runSpeed = 0
 
     def tick(self):
         # Animation

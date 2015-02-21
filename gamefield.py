@@ -16,6 +16,12 @@ class gamefield:
         itemList = [False, fire_item(), False, bomb_item(), False, skull_item(), False]
         random.seed()
         self.fields = map_loader("MAP", "default.map")
+
+        self.map = []
+        row = [0] * FIELDS_X
+        for i in range(FIELDS_Y):
+            self.map.append(list(row))
+
         for y in range(FIELDS_Y):
             for x in range(FIELDS_X):
                 mValue = self.fields[y][x]
@@ -24,10 +30,13 @@ class gamefield:
                 if mValue == '1':
                     self.fields[y][x] = [] # remove boden
                     self.fields[y][x].append(stone())
+                    self.map[y][x] = 1
                 elif mValue == '2':
                     rand = random.randint(2, 30)
                     if rand % 2 == 0:
                         self.fields[y][x].append(crate(random.choice(itemList)))
+                        self.map[y][x] = 1
+                        
                 elif mValue == '3':
                     self.fields[y][x].append(player_x("player1"))
                 elif mValue == '4':
@@ -63,7 +72,7 @@ class gamefield:
             for x in range(FIELDS_X):
                 for obj in self.fields[y][x]:
                     if obj.tickable:
-                        obj._tick ()
+                        obj._tick()
 
     def add(self, obj, x, y):
         if (0 <= x <= FIELDS_X) and (0 <= y <= FIELDS_Y):

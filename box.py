@@ -227,7 +227,7 @@ class explosion(box):
                 w = True
             if isBreakable:
                 if isBomb:
-                    obj.counter = 80
+                    obj.counter = 89
                 else:
                     obj.destroy(gf, newX, newY)
             

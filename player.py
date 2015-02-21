@@ -154,15 +154,12 @@ class player_x(player):
         self.K_LEFT  = config.getint(keyMapping, "left")
 
     def update(self, gf, x, y):
-        # Put bomb
-        if self.putBomb:
-            self.resetBomb()
-            bomb(gf, self.bombSize, x, y)
 
         # Move player
         list = gf.checkPosition(x+self.x_runSpeed, y+self.y_runSpeed)
         w = False
         d = False
+        b = False
         for i in list:
             obj, isWall, isBomb, isPlayer, isBreakable, isDeadly = i
 
@@ -170,13 +167,24 @@ class player_x(player):
                 w = True
             if isDeadly:
                 d = True
+            if isBomb:
+                b = True
+
+        # Put bomb
+        if self.putBomb:
+            self.resetBomb()
+            if not b:
+                bomb(gf, self.bombSize, x, y)
+                return
+
         if d:
             self.destroy(gf, x, y)
         else:
-            if not w:
-                gf.move(self, x+self.x_runSpeed, y+self.y_runSpeed, x, y)
-                self.x_runSpeed = 0
-                self.y_runSpeed = 0
+            if(self.x_runSpeed != 0 or self.y_runSpeed != 0):
+                if not w:
+                    gf.move(self, x+self.x_runSpeed, y+self.y_runSpeed, x, y)
+                    self.x_runSpeed = 0
+                    self.y_runSpeed = 0
 
     def tick(self):
         # Animation

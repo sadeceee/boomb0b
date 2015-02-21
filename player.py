@@ -58,25 +58,18 @@ class player(object, timer):
     def tick(self):
         pass
 
-    def move_up(self):
-        if self.x_runSpeed == 0:
-            self.y_runSpeed = -1
-            self.DIRECTION = "B"
-
-    def move_down(self):
-        if self.x_runSpeed == 0:
-            self.y_runSpeed = 1
-            self.DIRECTION = "F"
-
-    def move_right(self):
-        if self.y_runSpeed == 0:
-            self.x_runSpeed = 1
-            self.DIRECTION = "R"
-
-    def move_left(self):
-        if self.y_runSpeed == 0:
-            self.x_runSpeed = -1
-            self.DIRECTION = "L"
+    # reduced move function with additional parameter
+    # horizontal: is the movement horizontal (left or right) or not (vertical, face, back)
+    def move_to_direction(self, direction, runspeed, horizontal):
+        if horizontal:
+            if self.y_runSpeed == 0:
+                self.x_runSpeed = runspeed
+                self.DIRECTION = direction
+        else:
+            if self.x_runSpeed == 0:
+                self.y_runSpeed = runspeed
+                self.DIRECTION = direction
+        self.timer_start();
 
     def stop(self):
         self.y_runSpeed = 0
@@ -184,34 +177,21 @@ class player_x(player):
     def handleEvent(self, event):
         if event.type == pygame.KEYDOWN:
             if event.key == self.K_UP:
-                self.move_up()
-                self.timer_start()
+                self.move_to_direction("B", -PLAYER_RUNSPEED, False)
                 self.image = self.WALKING_B[0]
             elif event.key == self.K_DOWN:
-                self.move_down()
-                self.timer_start()
+                self.move_to_direction("F", PLAYER_RUNSPEED, False)
                 self.image = self.WALKING_F[0]
             elif event.key == self.K_RIGHT:
-                self.move_right()
-                self.timer_start()
+                self.move_to_direction("R", PLAYER_RUNSPEED, True)
                 self.image = self.WALKING_R[0]
             elif event.key == self.K_LEFT:
-                self.move_left()
-                self.timer_start()
+                self.move_to_direction("L", -PLAYER_RUNSPEED, True)
                 self.image = self.WALKING_L[0]
             if event.key == self.K_BOMB:
                 self.createBomb()
         if event.type == pygame.KEYUP:
-            if event.key == self.K_UP:
-                self.stop()
-                self.timer_stop()
-            elif event.key == self.K_DOWN:
-                self.stop()
-                self.timer_stop()
-            elif event.key == self.K_RIGHT:
-                self.stop()
-                self.timer_stop()
-            elif event.key == self.K_LEFT:
+            if event.key in (self.K_UP, self.K_DOWN, self.K_RIGHT, self.K_LEFT):
                 self.stop()
                 self.timer_stop()
             if event.key == self.K_BOMB:

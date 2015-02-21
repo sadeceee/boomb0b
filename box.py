@@ -152,35 +152,12 @@ class explosion(box):
 
         if(temp_pic == False):
             raw_image = image_loader(dir, filename)
-            pos = 6
-            if(type == EXP_INITIAL):
-                pos = 6
-            elif(type == EXP_CENTER_X):
-                pos = 4
-            elif(type == EXP_CENTER_T):
-                pos = 5
-            elif(type == EXP_CENTER_L):
-                pos = 3
-            elif(type == EXP_CENTER_B):
-                pos = 1
-            elif(type == EXP_CENTER_U):
-                pos = 0
-            elif(type == EXP_BRIDGE):
-                pos = 1
-            elif(type == EXP_END):
-                pos = 2
-            self.filename_anim.blit(raw_image, (0,0), (pos * FIELD_SIZE_WIDTH, 0, FIELD_SIZE_WIDTH, FIELD_SIZE_HEIGHT))
+
+            self.filename_anim.blit(raw_image, (0,0), (type * FIELD_SIZE_WIDTH, 0, FIELD_SIZE_WIDTH, FIELD_SIZE_HEIGHT))
             image_saver(type, self.filename_anim)
         else: self.filename_anim = temp_pic
 
-        if(direction == EXP_UP):
-            pass
-        elif(direction == EXP_RIGHT):
-            self.filename_anim = pygame.transform.rotate(self.filename_anim, -90)
-        elif(direction == EXP_DOWN):
-            self.filename_anim = pygame.transform.rotate(self.filename_anim, 180)
-        elif(direction == EXP_LEFT):
-            self.filename_anim = pygame.transform.rotate(self.filename_anim, 90)
+        self.filename_anim = pygame.transform.rotate(self.filename_anim, direction)
 
         self.image = self.filename_anim
         self.load_timer(0)
@@ -227,7 +204,7 @@ class explosion(box):
         key = ""
         key = key.join(keyList)
         myType, myDirection = get_center_value(key)
-        if(myType and myDirection):
+        if((myType and myDirection) or myType == 0):
             self.load("IMG", "bomb_animation.png", myType, myDirection)
         list = gf.checkPosition(x, y)
         for item in list:

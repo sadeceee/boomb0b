@@ -17,11 +17,6 @@ class gamefield:
         random.seed()
         self.fields = map_loader("MAP", "default.map")
 
-        self.map = []
-        row = [0] * FIELDS_X
-        for i in range(FIELDS_Y):
-            self.map.append(list(row))
-
         for y in range(FIELDS_Y):
             for x in range(FIELDS_X):
                 mValue = self.fields[y][x]
@@ -30,13 +25,10 @@ class gamefield:
                 if mValue == '1':
                     self.fields[y][x] = [] # remove boden
                     self.fields[y][x].append(stone())
-                    self.map[y][x] = 1
                 elif mValue == '2':
                     rand = random.randint(2, 30)
                     if rand % 2 == 0:
                         self.fields[y][x].append(crate(random.choice(itemList)))
-                        self.map[y][x] = 1
-                        
                 elif mValue == '3':
                     self.fields[y][x].append(player_x("player1"))
                 elif mValue == '4':
@@ -86,7 +78,7 @@ class gamefield:
         if (0 <= x <= FIELDS_X) and (0 <= y <= FIELDS_Y):
             templist = []
             for obj in self.fields[y][x]:
-                templist.append((obj, obj.isWall, obj.isBomb, obj.isItem, obj.breakable, obj.deadly))
+                templist.append((obj, obj.isWall, obj.isBomb, obj.isItem, obj.breakable, obj.deadly, obj.isPlayer))
 
             return templist
 
@@ -106,3 +98,31 @@ class gamefield:
             for x in range(FIELDS_X):
                 for obj in self.fields[y][x]:
                     obj.handleEvent(event)
+
+    def generateMap(self, gobj):
+        map = []
+        row = [0] * FIELDS_X
+        for i in range(FIELDS_Y):
+            map.append(list(row))
+
+        for y in range(FIELDS_Y):
+            for x in range(FIELDS_X):
+                for obj in self.fields[y][x]:
+                    if gobj != obj:
+                        try:
+                            if obj.isPlayer:
+                                map[y][x] = 4       # Player
+                            elif obj.deadly:
+                                map[y][x] = 3       # Toedlich
+                            elif obj.breakable:
+                                map[y][x] = 2       # Zerstoerbar
+                            elif obj.isWall:
+                                map[y][x] = 1       # Wall
+                            else:
+                                map[y][x] = 0       # Frei
+                        except AttributeError:
+                            map[y][x] = 0           # Frei
+                    else:
+                        map[y][x] = -1              # Objekt selbst
+
+        return map

@@ -303,6 +303,8 @@ class KI(player):
 
             # Select new destination if none is set
             if self.desX == None or self.desY == None or (x == self.desX and y == self.desY):
+                self.desX = None
+                self.desY = None
                 self.selectDestination()
 
             # Calculate path to destination

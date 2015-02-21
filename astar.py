@@ -24,7 +24,7 @@ class node:
         d = math.sqrt(xDest*xDest + yDest*yDest)
         return d
 
-    def lower_then(self, other):
+    def __lt__(self, other):
         return self.priority < other.priority
 
     def next(self, direction, d):

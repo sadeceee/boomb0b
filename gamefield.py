@@ -13,6 +13,7 @@ class gamefield:
     c_screen = None
 
     def __init__(self, screen):
+        itemList = [False, fire_item(), False, bomb_item(), False, skull_item(), False]
         random.seed()
         self.fields = map_loader("MAP", "default.map")
         for y in range(FIELDS_Y):
@@ -26,7 +27,7 @@ class gamefield:
                 elif mValue == '2':
                     rand = random.randint(2, 30)
                     if rand % 2 == 0:
-                        self.fields[y][x].append(crate())
+                        self.fields[y][x].append(crate(random.choice(itemList)))
                 elif mValue == '3':
                     self.fields[y][x].append(player_x("player1"))
                 elif mValue == '4':

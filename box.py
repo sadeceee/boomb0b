@@ -51,11 +51,14 @@ class stone(box):
 
 class crate(box):
 
-    def __init__(self):
+    crateItem = False
+
+    def __init__(self, item):
         super(crate, self).__init__()
 
         self.isWall = True
         self.breakable = True
+        self.crateItem = item
 
         self.crate_anim = []
         self.count = 1
@@ -66,6 +69,8 @@ class crate(box):
     def update(self, gf, x, y):
         if self.des == True:
             gf.rem(self, x, y)
+            if self.crateItem:
+                gf.add(self.crateItem, x, y)
 
     def load(self, dir, filename):
         sprite_sheet = image_loader(dir, filename)

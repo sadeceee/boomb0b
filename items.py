@@ -1,15 +1,21 @@
+import pygame
+from constants import *
 from box import box
 
 
 class fire_item(box):
 
-    def __init__(self):
+    def __init__(self, posX, posY):
         super(fire_item, self).__init__()
+
+        self.posX = posX
+        self.posY = posY
 
         self.breakable = True
         self.isItem = True
 
         self.load("IMG", "item_fire.png")
+        self.rect = pygame.Rect(self.posX, self.posY, FIELD_SIZE_WIDTH, FIELD_SIZE_HEIGHT)
 
     def destroyNew(self, gf, x, y, player):
         player.increaseBombSize()
@@ -18,13 +24,17 @@ class fire_item(box):
 
 class bomb_item(box):
 
-    def __init__(self):
+    def __init__(self, posX, posY):
         super(bomb_item, self).__init__()
+
+        self.posX = posX
+        self.posY = posY
 
         self.breakable = True
         self.isItem = True
 
         self.load("IMG", "item_bomb.png")
+        self.rect = pygame.Rect(self.posX, self.posY, FIELD_SIZE_WIDTH, FIELD_SIZE_HEIGHT)
 
     def destroyNew(self, gf, x, y, player):
         player.increaseMaxBombs()
@@ -33,13 +43,17 @@ class bomb_item(box):
 
 class skull_item(box):
 
-    def __init__(self):
+    def __init__(self, posX, posY):
         super(skull_item, self).__init__()
+
+        self.posX = posX
+        self.posY = posY
 
         self.breakable = True
         self.isItem = True
 
         self.load("IMG", "item_skull.png")
+        self.rect = pygame.Rect(self.posX, self.posY, FIELD_SIZE_WIDTH, FIELD_SIZE_HEIGHT)
 
     def destroyNew(self, gf, x, y, player):
         player.poisonPlayer()

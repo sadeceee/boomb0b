@@ -1,4 +1,4 @@
-class timer:#
+class timer:
 
     def __init__(self, interval=1):
         self.load_timer(interval)
@@ -6,7 +6,7 @@ class timer:#
     def load_timer(self, interval=1, running=False):
         self.interval = interval
         self.tickable = running
-        self._next = 0
+        self.next = 0
 
     def _tick(self):
         self.next += 1

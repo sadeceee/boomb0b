@@ -36,8 +36,8 @@ class player(object, timer):
         self.frame = 0
         self.ANIMATION_SPEED = 10
 
-    def draw(self, screen, x, y):
-        screen.blit(self.image, (x, y))
+    def draw(self, screen):
+        screen.blit(self.image, (self.posX, self.posY))
 
     def load(self, dir, filename):
         sprite_sheet = image_loader(dir, filename)
@@ -114,11 +114,16 @@ class player_x(player):
     K_RIGHT   = -1
     K_LEFT    = -1
 
-    def __init__(self, keyMapping = None):
+    def __init__(self, posX, posY, keyMapping = None):
         super(player_x, self).__init__()
+
+        self.posX = posX
+        self.posY = posY
 
         self.loadKeys(keyMapping)
         self.load("IMG", "player.png")
+        self.rect = pygame.Rect(self.posX+13, self.posY+12, FIELD_SIZE_WIDTH-26, FIELD_SIZE_HEIGHT-24)
+
 
         if (keyMapping != None):
             self.loadKeys(keyMapping)
@@ -132,47 +137,14 @@ class player_x(player):
         self.K_RIGHT = config.getint(keyMapping, "right")
         self.K_LEFT  = config.getint(keyMapping, "left")
 
-    def update(self, gf, x, y):
-        # Move player
-        """ CAUTION: when movement is changed, take care of new x, y values """
-        list = gf.checkPosition(x+self.x_runSpeed, y+self.y_runSpeed)
-        w = False
-        d = False
-        b = False
-        itemList = []
-        for i in list:
-            obj, isWall, isBomb, isItem, isBreakable, isDeadly = i
-
-            if isWall:
-                w = True
-            if isDeadly:
-                d = True
-            if isBomb:
-                b = True
-            if isItem:
-                itemList.append(obj)
-
-        # Put bomb
-        if self.putBomb:
-            self.resetBomb()
-            if (not b and self.bombs > 0):
-                bomb(gf, self,  self.bombSize, x, y)
-                self.bombs = max(self.bombs - 1, 0)
-                return
-
-        if d:
-            self.destroy(gf, x, y)
-        else:
-            if(self.x_runSpeed != 0 or self.y_runSpeed != 0):
-                if not w:
-                    gf.move(self, x+self.x_runSpeed, y+self.y_runSpeed, x, y)
-
-                    for item in itemList:
-                        """ CAUTION: when movement is changed, take care of new x, y values """
-                        self = item.destroyNew(gf, x+self.x_runSpeed, y+self.y_runSpeed, self)
-
-                    self.x_runSpeed = 0
-                    self.y_runSpeed = 0
+    def update(self, gf):
+        if not gf.collisionWall(self):
+            self.posX = self.posX + self.x_runSpeed
+            self.posY = self.posY + self.y_runSpeed
+            self.rect.x = self.posX+13
+            self.rect.y = self.posY+12
+        #self.posX = self.posX + self.x_runSpeed
+        #self.rect.x = self.posX
 
     def tick(self):
         # Animation
@@ -227,20 +199,25 @@ class KI(player):
 
     path = ""
 
-    def __init__(self):
+    def __init__(self, posX, posY):
         super(KI, self).__init__()
 
+        self.posX = posX
+        self.posY = posY
         self.dx = [1, 0, -1, 0]
         self.dy = [0, 1, 0, -1]
 
 
         self.load("IMG", "KI.png")
+        self.rect = pygame.Rect(self.posX, self.posY, FIELD_SIZE_WIDTH, FIELD_SIZE_HEIGHT)
         self.timer_start()
 
 
-    def update(self, gf, x, y):
+    def update(self, gf):
+        pass
+        """
         # Move player
-        list = gf.checkPosition(x+self.x_runSpeed, y+self.y_runSpeed)
+        list = gf.checkPosition(self.posX/64+self.x_runSpeed, self.posY/64+self.y_runSpeed)
         w = False
         d = False
         itemList = []
@@ -253,26 +230,28 @@ class KI(player):
                 d = True
             if isItem:
                 itemList.append(obj)
+
         if d:
-            self.destroy(gf, x, y)
+            self.destroy(gf, self.posX, self.posY)
         else:
             if self.path != "2222":
 
 
-                route = findPath(gf.map, 4, self.dx, self.dy, x, y, 5, 9)
+                route = findPath(gf.map, 4, self.dx, self.dy, self.posX/64, self.posY/64, 5, 9)
                 self.path = route.search()
 
             if not w:
 
 
-                gf.move(self, x+self.x_runSpeed, y+self.y_runSpeed, x, y)
+                gf.move(self, self.posX+self.x_runSpeed, self.posY+self.y_runSpeed, self.posX, self.posY)
 
                 for item in itemList:
-                    """ CAUTION: when movement is changed, take care of new x, y values """
+                    CAUTION: when movement is changed, take care of new x, y values
                     self = item.destroyNew(gf, x+self.x_runSpeed, y+self.y_runSpeed, self)
 
                 self.x_runSpeed = 0
                 self.y_runSpeed = 0
+        """
 
 
     def tick(self):

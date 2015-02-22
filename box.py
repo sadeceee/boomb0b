@@ -19,14 +19,14 @@ class box(object, timer):
     def __init__(self):
         pass
 
-    def draw(self, screen, x, y):
-        screen.blit(self.image, (x, y))
+    def draw(self, screen):
+        screen.blit(self.image, (self.posX, self.posY))
 
     def load(self, dir, filename):
         self.image = image_loader(dir, filename)
         self.load_timer(0)
 
-    def update(self, gf, x, y):
+    def update(self, gf):
         pass
 
     def tick(self):
@@ -40,30 +40,38 @@ class box(object, timer):
 
 class stone(box):
 
-    def __init__(self):
+    def __init__(self, posX, posY):
         super(stone, self).__init__()
+
+        self.posX = posX
+        self.posY = posY
 
         self.isWall = True
         self.breakable = False
 
         self.load("IMG", "stone.bmp")
+        self.rect = pygame.Rect(self.posX, self.posY, FIELD_SIZE_WIDTH, FIELD_SIZE_HEIGHT)
 
 
 class crate(box):
 
-    def __init__(self):
+    def __init__(self, posX, posY):
         super(crate, self).__init__()
 
         self.isWall = True
         self.breakable = True
+
+        self.posX = posX
+        self.posY = posY
 
         self.crate_anim = []
         self.count = 1
         self.des = False
         self.ANIMATION_SPEED = 4
         self.load("IMG", "crate.png")
+        self.rect = pygame.Rect(self.posX, self.posY, FIELD_SIZE_WIDTH, FIELD_SIZE_HEIGHT)
 
-    def update(self, gf, x, y):
+    def update(self, gf):
         if self.des == True:
             gf.rem(self, x, y)
 
@@ -103,10 +111,11 @@ class bomb(box):
         self.bombSize = mySize
         self.mPlayer = player
         self.load("IMG", "bomb.png")
+        self.rect = pygame.Rect(self.posX, self.posY, FIELD_SIZE_WIDTH, FIELD_SIZE_HEIGHT)
 
         gf.add(self, x, y)
 
-    def update(self, gf, x, y):
+    def update(self, gf):
         self.counter += 1
         if(self.counter == BOMB_TIMER):
             self.mPlayer.giveBomb()
@@ -143,6 +152,7 @@ class explosion(box):
             self.timer = timeLeft
 
         self.load("IMG", "bomb_animation.png", self.type, self.direction)
+        self.rect = pygame.Rect(self.posX, self.posY, FIELD_SIZE_WIDTH, FIELD_SIZE_HEIGHT)
 
         gf.add(self, x, y)
 
@@ -162,7 +172,7 @@ class explosion(box):
         self.image = self.filename_anim
         self.load_timer(0)
 
-    def update(self, gf, x, y):
+    def update(self, gf):
         self.timer -= 1
         if(self.timer <= 0):
             return True
@@ -222,7 +232,7 @@ class explosion(box):
                 w = True
             if isBreakable:
                 if isBomb:
-                    obj.counter = 89
+                    obj.counter = BOMB_TIMER-1
                 else:
                     obj.destroy(gf, newX, newY)
             
@@ -254,13 +264,18 @@ class dummy(box):
         self.breakable = False
 
         self.load("IMG", "dummy.bmp")
+        self.rect = pygame.Rect(self.posX, self.posY, FIELD_SIZE_WIDTH, FIELD_SIZE_HEIGHT)
 
 class boden(box):
 
-    def __init__(self):
+    def __init__(self, posX, posY):
         super(boden, self).__init__()
+
+        self.posX = posX
+        self.posY = posY
 
         self.isWall = False
         self.breakable = False
 
         self.load("IMG", "boden.bmp")
+        self.rect = pygame.Rect(self.posX, self.posY, FIELD_SIZE_WIDTH, FIELD_SIZE_HEIGHT)
